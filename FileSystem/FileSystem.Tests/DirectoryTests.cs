@@ -18,6 +18,16 @@ namespace FileSystem.Tests
         }
 
         [TestMethod]
+        public void ParseNameOfDirectory()
+        {
+            var path = "/sample/test/text.txt";
+            var directory = new Directory(path, null);
+
+            Assert.AreEqual(directory.Path, path);
+            Assert.AreEqual(directory.Name, "text.txt");
+        }
+
+        [TestMethod]
         public void AddChildrenToDirectory()
         {
             var path = "/sample";

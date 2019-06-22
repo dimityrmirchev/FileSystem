@@ -1,12 +1,11 @@
-﻿using System;
-
-namespace FileSystem
+﻿namespace FileSystem
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var fileSystem = new Models.FileSystem();
+           
         }
     }
 }
