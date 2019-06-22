@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FileSystem.Models
 {
@@ -23,15 +24,9 @@ namespace FileSystem.Models
             _children.Remove(file);
         }
 
-        public IEnumerable<Directory> GetSubDirectories()
+        public IEnumerable<File> GetChildren()
         {
-            foreach (var child in _children)
-            {
-                if (child is Directory directory)
-                {
-                    yield return directory;
-                }
-            }
+            return _children;
         }
     }
 }
