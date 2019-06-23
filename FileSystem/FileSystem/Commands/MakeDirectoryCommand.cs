@@ -12,8 +12,21 @@ namespace FileSystem.Commands
 
         public override void Execute(Models.FileSystem fileSystem)
         {
-            fileSystem.AddDirectory(Parameters);
-            Console.Write("$ ");
+            try
+            {
+                fileSystem.AddDirectory(Parameters);
+                Console.Write("$ ");
+            }
+            catch (ArgumentException argumentException)
+            {
+                Console.WriteLine(argumentException.Message);
+                Console.Write("$ ");
+            }
+            catch (InvalidOperationException invalidOperationException)
+            {
+                Console.WriteLine(invalidOperationException.Message);
+                Console.Write("$ ");
+            }
         }
     }
 }

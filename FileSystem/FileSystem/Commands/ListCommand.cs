@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FileSystem.Models;
 
 namespace FileSystem.Commands
@@ -11,7 +12,18 @@ namespace FileSystem.Commands
 
         public override void Execute(Models.FileSystem fileSystem)
         {
-            var fileList = fileSystem.ListDirectory(Parameters);
+            IEnumerable<File> fileList;
+            try
+            {
+                fileList = fileSystem.ListDirectory(Parameters);
+            }
+            catch (InvalidOperationException exception)
+            {
+                Console.WriteLine(exception.Message);
+                Console.Write("$ ");
+                return;
+            }
+          
             foreach (var file in fileList)
             {
                 if (file is Directory directory)
