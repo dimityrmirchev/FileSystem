@@ -5,14 +5,15 @@ namespace FileSystem.Models
 {
     public class Directory : File
     {
-        private readonly Directory _parent;
         private readonly List<File> _children;
 
         public Directory(string path, Directory parent) : base(path)
         {
-            _parent = parent;
+            Parent = parent;
             _children = new List<File>();
         }
+
+        public Directory Parent { get; private set; }
 
         public void AddChild(File file)
         {
