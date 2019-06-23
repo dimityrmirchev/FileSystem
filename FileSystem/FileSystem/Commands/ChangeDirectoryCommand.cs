@@ -9,11 +9,11 @@ namespace FileSystem.Commands
 
         }
 
-        public override void Execute()
+        public override void Execute(Models.FileSystem fileSystem)
         {
             try
             {
-                Models.FileSystem.Instance.ChangeDirectory(Parameters);
+                fileSystem.ChangeDirectory(Parameters);
                 Console.Write("$ ");
             }
             catch (InvalidOperationException exception)

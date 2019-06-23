@@ -7,14 +7,14 @@ namespace FileSystem
     {
         static void Main(string[] args)
         {
-            var fileSystem = Models.FileSystem.Instance;
+            var fileSystem = new Models.FileSystem();
 
             var factory = new CommandFactory();
             var command = factory.GetCommand("cd test");
-            command.Execute();
+            command.Execute(fileSystem);
 
             command = factory.GetCommand("cd ..");
-            command.Execute();
+            command.Execute(fileSystem);
         }
     }
 }

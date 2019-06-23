@@ -6,12 +6,7 @@ using FileSystem.Commands;
 namespace FileSystem.Services
 {
     public class CommandFactory
-    {
-        public CommandFactory()
-        {
-
-        }
-
+    { 
         public ICommand GetCommand(string job)
         {
             var trimmed = job.Trim();

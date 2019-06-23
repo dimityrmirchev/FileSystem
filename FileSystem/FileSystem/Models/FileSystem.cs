@@ -8,13 +8,11 @@ namespace FileSystem.Models
         private readonly Directory _root;
         private Directory _currentDirectory;
 
-        private FileSystem()
+        public FileSystem()
         {
             _root = new Directory("/", null);
             _currentDirectory = _root;
         }
-
-        public static FileSystem Instance { get; } = new FileSystem();
 
         public string CurrentDirectoryPath => _currentDirectory.Path;
 
@@ -28,17 +26,26 @@ namespace FileSystem.Models
             ChangeDirectory(path, !path.StartsWith('/'));
         }
 
+        public bool TryGetDirectory(string path, out Directory directory)
+        {
+            return TryGetDirectory(path, !path.StartsWith('/'), out directory);
+        }
+
         private void AddDirectory(string path, bool relative)
         {
             var lastIndex = path.LastIndexOf('/');
             if (lastIndex != -1)
             {
                 var pathToAddTo = path.Substring(0, lastIndex + 1);
-                var newDirectoryName = path.Substring(lastIndex + 1, path.Length - lastIndex + 1);
+                var newDirectoryName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
                 if (TryGetDirectory(pathToAddTo, relative, out Directory directoryToAddTo)
                     && !TryGetDirectory(path, relative, out Directory _))
                 {
-                    directoryToAddTo.AddChild(new Directory(pathToAddTo + $"/{newDirectoryName}", directoryToAddTo));
+                    var newDirectoryPath = directoryToAddTo.Path.EndsWith("/")
+                        ? directoryToAddTo.Path + $"{newDirectoryName}"
+                        : directoryToAddTo.Path + $"/{newDirectoryName}";
+
+                    directoryToAddTo.AddChild(new Directory(newDirectoryPath, directoryToAddTo));
                 }
                 else
                 {
@@ -49,7 +56,10 @@ namespace FileSystem.Models
             {
                 if (!TryGetDirectory(path, relative, out Directory _))
                 {
-                    _currentDirectory.AddChild(new Directory(_currentDirectory.Path + $"/{path}", _currentDirectory));
+                    var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
+                        ? _currentDirectory.Path + $"{path}"
+                        : _currentDirectory.Path + $"/{path}";
+                    _currentDirectory.AddChild(new Directory(newDirectoryPath, _currentDirectory));
                 }
                 else
                 {

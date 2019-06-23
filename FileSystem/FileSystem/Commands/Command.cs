@@ -9,6 +9,6 @@
             Parameters = parameters;
         }
 
-        public abstract void Execute();
+        public abstract void Execute(Models.FileSystem fileSystem);
     }
 }
