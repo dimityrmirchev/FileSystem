@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FileSystem.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,6 +16,14 @@ namespace FileSystem.Tests
 
             Assert.AreEqual(directory.Path, path);
             Assert.AreEqual(directory.Name, "sample");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CreateInvalidDirectory()
+        {
+            var path = "/sample dsa";
+            var directory = new Directory(path, null);
         }
 
         [TestMethod]
