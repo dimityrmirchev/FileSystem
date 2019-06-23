@@ -49,7 +49,7 @@ namespace FileSystem.Models
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Cannot add directory {path}");
+                    throw new InvalidOperationException($"Cannot create directory {path}");
                 }
             }
             else
@@ -63,7 +63,7 @@ namespace FileSystem.Models
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Cannot add directory {path}");
+                    throw new InvalidOperationException($"Cannot create directory {path}");
                 }
             }
         }

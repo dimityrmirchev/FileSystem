@@ -10,7 +10,10 @@ namespace FileSystem
             var fileSystem = new Models.FileSystem();
 
             var factory = new CommandFactory();
-            var command = factory.GetCommand("cd test");
+            var command = factory.GetCommand("mkdir test");
+            command.Execute(fileSystem);
+
+            command = factory.GetCommand("cd test");
             command.Execute(fileSystem);
 
             command = factory.GetCommand("cd ..");

@@ -16,6 +16,8 @@ namespace FileSystem.Services
             {
                 case "cd":
                     return new ChangeDirectoryCommand(parameters);
+                case "mkdir":
+                    return new MakeDirectoryCommand(parameters);
                 default:
                     throw new NotImplementedException();
             }
