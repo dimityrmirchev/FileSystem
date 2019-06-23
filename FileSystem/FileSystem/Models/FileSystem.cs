@@ -27,9 +27,14 @@ namespace FileSystem.Models
             ChangeDirectory(path, !path.StartsWith('/'));
         }
 
-        public IEnumerable<File> ListCurrentDirectory()
+        public IEnumerable<File> ListDirectory(string path)
         {
-            return _currentDirectory.GetChildren();
+            if (TryGetDirectory(path, !path.StartsWith('/'), out Directory directory))
+            {
+                return directory.GetChildren();
+            }
+
+            throw new InvalidOperationException($"Couldn't list directory {path}");
         }
 
         public bool TryGetDirectory(string path, out Directory directory)

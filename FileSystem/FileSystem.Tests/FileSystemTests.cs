@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FileSystem.Tests
@@ -123,6 +124,65 @@ namespace FileSystem.Tests
             fileSystem.AddDirectory("/directory/testDirectory");
 
             fileSystem.ChangeDirectory("/directory1");
+        }
+
+        [TestMethod]
+        public void ListDirectoryFullPath()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.AddDirectory("/directory/testDirectory1");
+            fileSystem.AddDirectory("/directory/testDirectory2");
+
+            var listedDirectory = fileSystem.ListDirectory("/directory").ToList();
+
+            Assert.AreEqual(3, listedDirectory.Count);
+            Assert.IsTrue(listedDirectory.FirstOrDefault(f => f.Path == "/directory/testDirectory") != null);
+            Assert.IsTrue(listedDirectory.FirstOrDefault(f => f.Path == "/directory/testDirectory1") != null);
+            Assert.IsTrue(listedDirectory.FirstOrDefault(f => f.Path == "/directory/testDirectory2") != null);
+        }
+
+        [TestMethod]
+        public void ListDirectoryRelative()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.AddDirectory("/directory/testDirectory1");
+            fileSystem.AddDirectory("/directory/testDirectory2");
+
+            var listedDirectory = fileSystem.ListDirectory("directory").ToList();
+
+            Assert.AreEqual(3, listedDirectory.Count);
+            Assert.IsTrue(listedDirectory.FirstOrDefault(f => f.Path == "/directory/testDirectory") != null);
+            Assert.IsTrue(listedDirectory.FirstOrDefault(f => f.Path == "/directory/testDirectory1") != null);
+            Assert.IsTrue(listedDirectory.FirstOrDefault(f => f.Path == "/directory/testDirectory2") != null);
+        }
+
+        [TestMethod]
+        public void ListEmptyDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/testDirectory");
+
+            var listedDirectory = fileSystem.ListDirectory("/directory/testDirectory").ToList();
+
+            Assert.AreEqual(0, listedDirectory.Count);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ListInvalidDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.AddDirectory("/directory/testDirectory1");
+            fileSystem.AddDirectory("/directory/testDirectory2");
+
+            var listedDirectory = fileSystem.ListDirectory("/directory/123").ToList();
         }
     }
 }

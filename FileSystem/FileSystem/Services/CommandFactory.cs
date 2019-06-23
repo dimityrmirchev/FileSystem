@@ -32,10 +32,6 @@ namespace FileSystem.Services
                     }
                     return new PrintWorkingDirectoryCommand(parameters);
                 case "ls":
-                    if (!string.IsNullOrEmpty(parameters))
-                    {
-                        throw new ArgumentException("Ls command does not support parameters.");
-                    }
                     return new ListCommand(parameters);
                 default:
                     throw new NotImplementedException();

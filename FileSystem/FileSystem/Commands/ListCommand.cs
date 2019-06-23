@@ -11,7 +11,7 @@ namespace FileSystem.Commands
 
         public override void Execute(Models.FileSystem fileSystem)
         {
-            var fileList = fileSystem.ListCurrentDirectory();
+            var fileList = fileSystem.ListDirectory(Parameters);
             foreach (var file in fileList)
             {
                 if (file is Directory directory)

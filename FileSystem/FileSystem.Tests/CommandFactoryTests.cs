@@ -71,13 +71,5 @@ namespace FileSystem.Tests
 
             Assert.AreEqual("", listCommand.Parameters);
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void CreateInvalidListCommand()
-        {
-            var factory = new CommandFactory();
-            var command = factory.GetCommand("ls  invalid");
-        }
     }
 }
