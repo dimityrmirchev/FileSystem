@@ -14,11 +14,29 @@ namespace FileSystem.Services
             switch (commandName)
             {
                 case "cd":
+                    if (string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Cd command requires parameters.");
+                    }
                     return new ChangeDirectoryCommand(parameters);
                 case "mkdir":
+                    if (string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Mkdir command requires parameters.");
+                    }
                     return new MakeDirectoryCommand(parameters);
                 case "pwd":
+                    if (!string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Pwd command does not support parameters.");
+                    }
                     return new PrintWorkingDirectoryCommand(parameters);
+                case "ls":
+                    if (!string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Ls command does not support parameters.");
+                    }
+                    return new ListCommand(parameters);
                 default:
                     throw new NotImplementedException();
             }
@@ -40,7 +58,7 @@ namespace FileSystem.Services
             var splitter = trimmed.IndexOf(' ');
             return splitter == -1
                 ? string.Empty
-                : trimmed.Substring(splitter + 1, trimmed.Length - splitter - 1);
+                : trimmed.Substring(splitter + 1, trimmed.Length - splitter - 1).Trim();
         }
     }
 }

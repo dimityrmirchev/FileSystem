@@ -21,6 +21,9 @@ namespace FileSystem
 
             command = factory.GetCommand("cd ..");
             command.Execute(fileSystem);
+
+            command = factory.GetCommand("ls");
+            command.Execute(fileSystem);
         }
     }
 }

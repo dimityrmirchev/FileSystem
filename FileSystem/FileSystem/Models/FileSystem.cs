@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FileSystem.Models
@@ -24,6 +25,11 @@ namespace FileSystem.Models
         public void ChangeDirectory(string path)
         {
             ChangeDirectory(path, !path.StartsWith('/'));
+        }
+
+        public IEnumerable<File> ListCurrentDirectory()
+        {
+            return _currentDirectory.GetChildren();
         }
 
         public bool TryGetDirectory(string path, out Directory directory)
