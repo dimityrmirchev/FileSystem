@@ -13,6 +13,7 @@ namespace FileSystem.Commands
         public override void Execute(Models.FileSystem fileSystem)
         {
             fileSystem.AddDirectory(Parameters);
+            Console.Write("$ ");
         }
     }
 }

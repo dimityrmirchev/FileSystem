@@ -16,6 +16,9 @@ namespace FileSystem
             command = factory.GetCommand("cd test");
             command.Execute(fileSystem);
 
+            command = factory.GetCommand("pwd");
+            command.Execute(fileSystem);
+
             command = factory.GetCommand("cd ..");
             command.Execute(fileSystem);
         }

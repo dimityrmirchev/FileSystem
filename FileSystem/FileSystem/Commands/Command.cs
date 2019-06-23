@@ -2,12 +2,12 @@
 {
     public abstract class Command : ICommand
     {
-        protected readonly string Parameters;
-
         protected Command(string parameters)
         {
             Parameters = parameters;
         }
+
+        public string Parameters { get; }
 
         public abstract void Execute(Models.FileSystem fileSystem);
     }
