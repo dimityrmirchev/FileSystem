@@ -8,6 +8,21 @@ namespace FileSystem.Tests
     public class FileSystemTests
     {
         [TestMethod]
+        public void CheckDefaultDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            if (fileSystem.TryGetDirectory("/", out var directory))
+            {
+                Assert.AreEqual("", directory.Name);
+                Assert.AreEqual("/", directory.Path);
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
         public void AddDirectoryFullPathAndTryGetIt()
         {
             var fileSystem = new Models.FileSystem();
