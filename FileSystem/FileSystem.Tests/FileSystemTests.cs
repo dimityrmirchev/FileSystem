@@ -323,6 +323,27 @@ namespace FileSystem.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TryRemoveOneDirectoryOneContentFileWithRemoveContentFileFunction()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+
+            if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
+            {
+                directory.AddChild(new ContentFile("/file1", "test", directory));
+
+                var paths = new[] { "/file1", "/directory" };
+
+                fileSystem.RemoveContentFiles(paths);
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TryAddFileWithSameName()
         {
