@@ -29,6 +29,11 @@ namespace FileSystem.Models
 
         public IEnumerable<File> ListDirectory(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return _currentDirectory.GetChildren();
+            }
+
             if (TryGetDirectory(path, !path.StartsWith('/'), out Directory directory))
             {
                 return directory.GetChildren();
@@ -42,9 +47,16 @@ namespace FileSystem.Models
             var filesToRemove = new List<ContentFile>();
             foreach (var path in paths)
             {
-                if (TryGetContentFile(path, !path.StartsWith('/'), out ContentFile contentFile))
+                if (TryGetFile(path, !path.StartsWith('/'), out File file))
                 {
-                    filesToRemove.Add(contentFile);
+                    if (file is ContentFile contentFile)
+                    {
+                        filesToRemove.Add(contentFile);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"{file.Path} is not a content file");
+                    }
                 }
                 else
                 {
@@ -58,9 +70,9 @@ namespace FileSystem.Models
             }
         }
 
-        public bool TryGetDirectory(string path, out Directory directory)
+        public bool TryGetFile(string path, out File file)
         {
-            return TryGetDirectory(path, !path.StartsWith('/'), out directory);
+            return TryGetFile(path, !path.StartsWith('/'), out file);
         }
 
         private void AddDirectory(string path, bool isRelative)
@@ -133,11 +145,36 @@ namespace FileSystem.Models
 
         private bool TryGetDirectory(string path, bool isRelative, out Directory directory)
         {
-            var directoryNames = path.Split('/').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-            var currentDirectory = isRelative ? _currentDirectory : _root;
-            foreach (var name in directoryNames)
+            if (TryGetFile(path, isRelative, out var file) && file is Directory returnDirectory)
             {
-                if (string.Equals(name, ".."))
+                directory = returnDirectory;
+                return true;
+            }
+
+            directory = null;
+            return false;
+        }
+
+        private bool TryGetFile(string path, bool isRelative, out File file)
+        {
+            if (string.Equals(path.Trim(), "/"))
+            {
+                file = _root;
+                return true;
+            }
+
+            var pathToTraverse = path.Split('/').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+
+            if (pathToTraverse.Length == 0)
+            {
+                file = null;
+                return false;
+            }
+
+            var currentDirectory = isRelative ? _currentDirectory : _root;
+            for (var i = 0; i < pathToTraverse.Length - 1; i++)
+            {
+                if (string.Equals(pathToTraverse[i], ".."))
                 {
                     currentDirectory = currentDirectory?.Parent;
                 }
@@ -145,57 +182,35 @@ namespace FileSystem.Models
                 {
                     currentDirectory = currentDirectory?
                         .GetChildren()
-                        .FirstOrDefault(c => c is Directory && string.Equals(name, c.Name)) as Directory;
+                        .FirstOrDefault(c => c is Directory && string.Equals(pathToTraverse[i], c.Name)) as Directory;
                 }
 
                 if (currentDirectory == null)
                 {
-                    directory = null;
+                    file = null;
                     return false;
                 }
             }
 
-            directory = currentDirectory;
-            return true;
-        }
-
-        private bool TryGetContentFile(string path, bool isRelative, out ContentFile contentFile)
-        {
-            var directoryNames = path.Split('/').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-            var currentDirectory = isRelative ? _currentDirectory : _root;
-            for (var i = 0; i < directoryNames.Length - 1; i++)
+            if (string.Equals(pathToTraverse[pathToTraverse.Length - 1].Trim(), ".."))
             {
-                if (string.Equals(directoryNames[i], ".."))
-                {
-                    currentDirectory = currentDirectory?.Parent;
-                }
-                else
-                {
-                    currentDirectory = currentDirectory?
-                        .GetChildren()
-                        .FirstOrDefault(c => c is Directory && string.Equals(directoryNames[i], c.Name)) as Directory;
-                }
-
-                if (currentDirectory == null)
-                {
-                    contentFile = null;
-                    return false;
-                }
+                file = currentDirectory == _root
+                    ? _root
+                    : currentDirectory.Parent;
+                return true;
             }
 
             var fileToReturn = currentDirectory?
                 .GetChildren()
-                .FirstOrDefault(c =>
-                    c is ContentFile &&
-                    string.Equals(directoryNames[directoryNames.Length - 1], c.Name)) as ContentFile;
+                .FirstOrDefault(c => string.Equals(pathToTraverse[pathToTraverse.Length - 1], c.Name));
 
             if (fileToReturn == null)
             {
-                contentFile = null;
+                file = null;
                 return false;
             }
 
-            contentFile = fileToReturn;
+            file = fileToReturn;
             return true;
         }
     }

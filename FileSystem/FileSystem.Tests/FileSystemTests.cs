@@ -12,7 +12,7 @@ namespace FileSystem.Tests
         public void CheckDefaultDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            if (fileSystem.TryGetDirectory("/", out var directory))
+            if (fileSystem.TryGetFile("/", out var directory))
             {
                 Assert.AreEqual("", directory.Name);
                 Assert.AreEqual("/", directory.Path);
@@ -29,7 +29,7 @@ namespace FileSystem.Tests
             var fileSystem = new Models.FileSystem();
             fileSystem.AddDirectory("/directory");
 
-            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            if (fileSystem.TryGetFile("/directory", out var directory))
             {
                 Assert.AreEqual("directory", directory.Name);
                 Assert.AreEqual("/directory", directory.Path);
@@ -47,7 +47,7 @@ namespace FileSystem.Tests
             fileSystem.AddDirectory("/directory");
             fileSystem.AddDirectory("/directory/test");
 
-            if (fileSystem.TryGetDirectory("/directory", out var directory1))
+            if (fileSystem.TryGetFile("/directory", out var directory1))
             {
                 Assert.AreEqual("directory", directory1.Name);
                 Assert.AreEqual("/directory", directory1.Path);
@@ -57,7 +57,7 @@ namespace FileSystem.Tests
                 Assert.Fail("Directory was not added or couldn't be found in the tree.");
             }
 
-            if (fileSystem.TryGetDirectory("/directory/test", out var directory2))
+            if (fileSystem.TryGetFile("/directory/test", out var directory2))
             {
                 Assert.AreEqual("test", directory2.Name);
                 Assert.AreEqual("/directory/test", directory2.Path);
@@ -75,7 +75,7 @@ namespace FileSystem.Tests
             fileSystem.AddDirectory("directory");
             fileSystem.AddDirectory("directory/test");
 
-            if (fileSystem.TryGetDirectory("/directory", out var directory1))
+            if (fileSystem.TryGetFile("/directory", out var directory1))
             {
                 Assert.AreEqual("directory", directory1.Name);
                 Assert.AreEqual("/directory", directory1.Path);
@@ -85,7 +85,7 @@ namespace FileSystem.Tests
                 Assert.Fail("Directory was not added or couldn't be found in the tree.");
             }
 
-            if (fileSystem.TryGetDirectory("/directory/test", out var directory2))
+            if (fileSystem.TryGetFile("/directory/test", out var directory2))
             {
                 Assert.AreEqual("test", directory2.Name);
                 Assert.AreEqual("/directory/test", directory2.Path);
@@ -129,6 +129,21 @@ namespace FileSystem.Tests
             fileSystem.ChangeDirectory("../directory/testDirectory");
 
             Assert.AreEqual("/directory/testDirectory", fileSystem.CurrentDirectoryPath);
+
+            fileSystem.ChangeDirectory("/");
+
+            Assert.AreEqual("/", fileSystem.CurrentDirectoryPath);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ChangeDirectoryToEmpty()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/testDirectory");
+
+            fileSystem.ChangeDirectory("  ");
         }
 
         [TestMethod]
@@ -189,6 +204,18 @@ namespace FileSystem.Tests
         }
 
         [TestMethod]
+        public void ListCurrentDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/testDirectory");
+
+            var listedDirectory = fileSystem.ListDirectory("").ToList();
+
+            Assert.AreEqual(1, listedDirectory.Count);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ListInvalidDirectory()
         {
@@ -207,7 +234,7 @@ namespace FileSystem.Tests
             var fileSystem = new Models.FileSystem();
             fileSystem.AddDirectory("/directory");
 
-            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
                 directory.AddChild(new ContentFile("/directory/file1", "test", directory));
                 directory.AddChild(new ContentFile("/directory/file2", "test", directory));
@@ -232,9 +259,9 @@ namespace FileSystem.Tests
             var fileSystem = new Models.FileSystem();
             fileSystem.AddDirectory("/directory");
             fileSystem.AddDirectory("/directory/directory1");
-            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
-                if (fileSystem.TryGetDirectory("/directory/directory1", out var directory1))
+                if (fileSystem.TryGetFile("/directory/directory1", out var file1) && file1 is Directory directory1)
                 {
                     directory.AddChild(new ContentFile("/directory/file1", "test", directory));
                     directory1.AddChild(new ContentFile("/directory/directory1/file2", "test", directory1));
@@ -246,7 +273,7 @@ namespace FileSystem.Tests
 
                     fileSystem.RemoveContentFiles(paths);
 
-                    Assert.IsTrue(1  == directory.GetChildren().Count());
+                    Assert.IsTrue(1 == directory.GetChildren().Count());
                     Assert.IsTrue(!directory1.GetChildren().Any());
                 }
                 else
@@ -262,15 +289,26 @@ namespace FileSystem.Tests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void RemoveMissingContentFile()
+        public void TryRemoveDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            var paths = new[] { "/directory" };
+
+            fileSystem.RemoveContentFiles(paths);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TryRemoveMissingContentFile()
         {
             var fileSystem = new Models.FileSystem();
             fileSystem.AddDirectory("/directory");
 
-            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
                 directory.AddChild(new ContentFile("/directory/file1", "test", directory));
-              
+
                 var paths = new[] { "/directory/file1", "/directory/file2" };
 
                 Assert.IsTrue(1 == directory.GetChildren().Count());
@@ -290,7 +328,7 @@ namespace FileSystem.Tests
             var fileSystem = new Models.FileSystem();
             fileSystem.AddDirectory("/directory");
 
-            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
                 directory.AddChild(new ContentFile("/directory/file1", "test", directory));
                 directory.AddChild(new ContentFile("/directory/file1", "test", directory));
