@@ -289,7 +289,7 @@ namespace FileSystem.Tests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TryRemoveDirectory()
+        public void TryRemoveDirectoryWithRemoveContentFileFunction()
         {
             var fileSystem = new Models.FileSystem();
             fileSystem.AddDirectory("/directory");
