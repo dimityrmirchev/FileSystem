@@ -43,7 +43,7 @@ namespace FileSystem.Tests
             var directory = new Directory(path, null);
 
             directory.AddChild(new Directory(path + "/sample1", directory));
-            directory.AddChild(new ContentFile(path + "/test.txt", "Sample text."));
+            directory.AddChild(new ContentFile(path + "/test.txt", "Sample text.", directory));
 
             var children = directory.GetChildren().ToList();
 
@@ -56,7 +56,7 @@ namespace FileSystem.Tests
         {
             var path = "/sample";
             var directory = new Directory(path, null);
-            var contentFile = new ContentFile(path + "/test.txt", "Sample text.");
+            var contentFile = new ContentFile(path + "/test.txt", "Sample text.", directory);
 
             directory.AddChild(new Directory(path + "/sample1", directory));
             directory.AddChild(contentFile);

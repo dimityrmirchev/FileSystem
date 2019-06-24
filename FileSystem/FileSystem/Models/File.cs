@@ -5,7 +5,7 @@ namespace FileSystem.Models
 {
     public abstract class File
     {
-        protected File(string path)
+        protected File(string path, Directory parent)
         {
             var fileName = path.Split('/').Last().TrimEnd();
             if (fileName.Split(' ').Length != 1)
@@ -14,9 +14,11 @@ namespace FileSystem.Models
             }
             Path = path;
             Name = fileName;
+            Parent = parent;
         }
 
         public string Path { get; }
         public string Name { get; }
+        public Directory Parent { get; }
     }
 }

@@ -33,6 +33,8 @@ namespace FileSystem.Services
                     return new PrintWorkingDirectoryCommand(parameters);
                 case "ls":
                     return new ListCommand(parameters);
+                case "rm":
+                    return new RemoveCommand(parameters);
                 default:
                     throw new NotImplementedException();
             }

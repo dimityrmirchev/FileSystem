@@ -2,7 +2,7 @@
 {
     public class ContentFile : File
     {
-        public ContentFile(string path, string content) : base(path)
+        public ContentFile(string path, string content, Directory parent) : base(path, parent)
         {
             Content = content;
         }

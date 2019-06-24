@@ -12,7 +12,7 @@ namespace FileSystem.Tests
         {
             var content = "This is a sample file.";
             var path = "/sample.txt";
-            var file = new ContentFile(path, content);
+            var file = new ContentFile(path, content, null);
 
             Assert.AreEqual(file.Content, content);
             Assert.AreEqual(file.Path, path);
@@ -25,7 +25,7 @@ namespace FileSystem.Tests
         {
             var content = "This is a sample file.";
             var path = "/sample txt";
-            var file = new ContentFile(path, content);
+            var file = new ContentFile(path, content, null);
         }
     }
 }

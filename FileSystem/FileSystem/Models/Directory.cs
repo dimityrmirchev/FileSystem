@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FileSystem.Models
@@ -7,16 +8,18 @@ namespace FileSystem.Models
     {
         private readonly List<File> _children;
 
-        public Directory(string path, Directory parent) : base(path)
+        public Directory(string path, Directory parent) : base(path, parent)
         {
-            Parent = parent;
             _children = new List<File>();
         }
 
-        public Directory Parent { get; private set; }
-
         public void AddChild(File file)
         {
+            if (_children.FirstOrDefault(c => c.Path == file.Path) != null)
+            {
+                throw new ArgumentException($"File {file.Path} already exists in the directory");
+            }
+
             _children.Add(file);
         }
 

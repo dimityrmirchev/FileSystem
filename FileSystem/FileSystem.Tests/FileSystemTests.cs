@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FileSystem.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FileSystem.Tests
@@ -198,6 +199,106 @@ namespace FileSystem.Tests
             fileSystem.AddDirectory("/directory/testDirectory2");
 
             var listedDirectory = fileSystem.ListDirectory("/directory/123").ToList();
+        }
+
+        [TestMethod]
+        public void RemoveContentFiles()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+
+            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            {
+                directory.AddChild(new ContentFile("/directory/file1", "test", directory));
+                directory.AddChild(new ContentFile("/directory/file2", "test", directory));
+
+                var paths = new[] { "/directory/file1", "/directory/file2" };
+
+                Assert.IsTrue(2 == directory.GetChildren().Count());
+
+                fileSystem.RemoveContentFiles(paths);
+
+                Assert.IsTrue(!directory.GetChildren().Any());
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void RemoveContentFilesFromDifferentDirectories()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+            fileSystem.AddDirectory("/directory/directory1");
+            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            {
+                if (fileSystem.TryGetDirectory("/directory/directory1", out var directory1))
+                {
+                    directory.AddChild(new ContentFile("/directory/file1", "test", directory));
+                    directory1.AddChild(new ContentFile("/directory/directory1/file2", "test", directory1));
+
+                    var paths = new[] { "/directory/file1", "/directory/directory1/file2" };
+
+                    Assert.IsTrue(2 == directory.GetChildren().Count());
+                    Assert.IsTrue(1 == directory1.GetChildren().Count());
+
+                    fileSystem.RemoveContentFiles(paths);
+
+                    Assert.IsTrue(1  == directory.GetChildren().Count());
+                    Assert.IsTrue(!directory1.GetChildren().Any());
+                }
+                else
+                {
+                    Assert.Fail();
+                }
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RemoveMissingContentFile()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+
+            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            {
+                directory.AddChild(new ContentFile("/directory/file1", "test", directory));
+              
+                var paths = new[] { "/directory/file1", "/directory/file2" };
+
+                Assert.IsTrue(1 == directory.GetChildren().Count());
+
+                fileSystem.RemoveContentFiles(paths);
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TryAddFileWithSameName()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.AddDirectory("/directory");
+
+            if (fileSystem.TryGetDirectory("/directory", out var directory))
+            {
+                directory.AddChild(new ContentFile("/directory/file1", "test", directory));
+                directory.AddChild(new ContentFile("/directory/file1", "test", directory));
+            }
+            else
+            {
+                Assert.Fail();
+            }
         }
     }
 }
