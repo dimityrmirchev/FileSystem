@@ -136,7 +136,6 @@ namespace FileSystem.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void ChangeDirectoryToEmpty()
         {
             var fileSystem = new Models.FileSystem();
@@ -144,6 +143,8 @@ namespace FileSystem.Tests
             fileSystem.AddDirectory("/directory/testDirectory");
 
             fileSystem.ChangeDirectory("  ");
+
+            Assert.AreEqual("/", fileSystem.CurrentDirectoryPath);
         }
 
         [TestMethod]

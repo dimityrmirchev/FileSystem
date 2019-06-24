@@ -114,6 +114,11 @@ namespace FileSystem.Models
 
         private void ChangeDirectory(string path, bool isRelative)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
             if (TryGetDirectory(path, isRelative, out Directory directory))
             {
                 _currentDirectory = directory;
