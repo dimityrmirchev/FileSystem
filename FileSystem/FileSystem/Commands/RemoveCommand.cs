@@ -1,4 +1,6 @@
-﻿namespace FileSystem.Commands
+﻿using System;
+
+namespace FileSystem.Commands
 {
     public class RemoveCommand : Command
     {
@@ -10,6 +12,14 @@
         {
             var filePaths = Parameters.Split(' ');
 
+            try
+            {
+                fileSystem.RemoveContentFiles(filePaths);
+            }
+            catch (InvalidOperationException invalidOperationException)
+            {
+                Console.WriteLine(invalidOperationException.Message);
+            }
         }
     }
 }
