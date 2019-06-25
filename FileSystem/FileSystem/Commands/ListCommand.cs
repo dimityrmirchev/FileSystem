@@ -20,7 +20,6 @@ namespace FileSystem.Commands
             catch (InvalidOperationException exception)
             {
                 Console.WriteLine(exception.Message);
-                Console.Write("$ ");
                 return;
             }
           
@@ -39,7 +38,6 @@ namespace FileSystem.Commands
             }
 
             Console.WriteLine();
-            Console.Write("$ ");
         }
     }
 }

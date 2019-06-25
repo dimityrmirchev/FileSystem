@@ -48,7 +48,6 @@ namespace FileSystem.Commands
                 else
                 {
                     Console.WriteLine($"File {path} couldn't be found");
-                    Console.Write("$ ");
                     return;
                 }
             }
@@ -57,17 +56,14 @@ namespace FileSystem.Commands
             try
             {
                 fileSystem.CreateContentFile(outputFilePath, stringBuilder.ToString());
-                Console.Write("$ ");
             }
             catch (InvalidOperationException operationException)
             {
                 Console.WriteLine(operationException.Message);
-                Console.Write("$ ");
             }
             catch (ArgumentException argumentException)
             {
                 Console.WriteLine(argumentException.Message);
-                Console.Write("$ ");
             }
         }
 
@@ -85,17 +81,14 @@ namespace FileSystem.Commands
             try
             {
                 fileSystem.CreateContentFile(outputFilePath, stringBuilder.ToString());
-                Console.Write("$ ");
             }
             catch (InvalidOperationException operationException)
             {
                 Console.WriteLine(operationException.Message);
-                Console.Write("$ ");
             }
             catch (ArgumentException argumentException)
             {
                 Console.WriteLine(argumentException.Message);
-                Console.Write("$ ");
             }
         }
 
@@ -112,13 +105,11 @@ namespace FileSystem.Commands
                 else
                 {
                     Console.WriteLine($"File {path} couldn't be found");
-                    Console.Write("$ ");
                     return;
                 }
             }
 
             Console.Write(stringBuilder.ToString());
-            Console.Write("$ ");
         }
     }
 }

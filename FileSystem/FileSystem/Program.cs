@@ -10,9 +10,10 @@ namespace FileSystem
             var readLine = string.Empty;
             var fileSystem = new Models.FileSystem();
             var factory = new CommandFactory();
-            Console.Write("$ ");
             while (!string.Equals(readLine, "exit"))
             {
+                Console.Write("$ ");
+
                 readLine = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(readLine))

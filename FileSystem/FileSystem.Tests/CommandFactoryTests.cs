@@ -107,5 +107,41 @@ namespace FileSystem.Tests
             var factory = new CommandFactory();
             var command = factory.GetCommand("rm ");
         }
+
+        [TestMethod]
+        public void CreateClearCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("clear");
+            var listCommand = (ClearCommand)command;
+
+            Assert.AreEqual("", listCommand.Parameters);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CreateInvalidClearCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("clear test");
+        }
+
+        [TestMethod]
+        public void CreateExitCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("exit");
+            var listCommand = (ExitCommand)command;
+
+            Assert.AreEqual("", listCommand.Parameters);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CreateInvalidExitCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("exit test");
+        }
     }
 }

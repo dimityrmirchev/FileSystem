@@ -15,17 +15,14 @@ namespace FileSystem.Commands
             try
             {
                 fileSystem.CreateDirectory(Parameters);
-                Console.Write("$ ");
             }
             catch (ArgumentException argumentException)
             {
                 Console.WriteLine(argumentException.Message);
-                Console.Write("$ ");
             }
             catch (InvalidOperationException invalidOperationException)
             {
                 Console.WriteLine(invalidOperationException.Message);
-                Console.Write("$ ");
             }
         }
     }

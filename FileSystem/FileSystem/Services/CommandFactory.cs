@@ -45,6 +45,18 @@ namespace FileSystem.Services
                         throw new ArgumentException("Cat command requires parameters.");
                     }
                     return new ConcatenateCommand(parameters);
+                case "clear":
+                    if (!string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Clear command does not support parameters.");
+                    }
+                    return new ClearCommand(parameters);
+                case "exit":
+                    if (!string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Exit command does not support parameters.");
+                    }
+                    return new ExitCommand(parameters);
                 default:
                     throw new NotImplementedException();
             }

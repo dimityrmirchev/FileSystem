@@ -11,7 +11,6 @@ namespace FileSystem.Commands
         public override void Execute(Models.FileSystem fileSystem)
         {
             Console.WriteLine(fileSystem.CurrentDirectoryPath);
-            Console.Write("$ ");
         }
     }
 }

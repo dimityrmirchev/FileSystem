@@ -14,12 +14,10 @@ namespace FileSystem.Commands
             try
             {
                 fileSystem.ChangeDirectory(Parameters);
-                Console.Write("$ ");
             }
             catch (InvalidOperationException exception)
             {
                 Console.WriteLine(exception.Message);
-                Console.Write("$ ");
             }
         }
     }
