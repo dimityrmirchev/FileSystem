@@ -27,7 +27,7 @@ namespace FileSystem.Tests
         public void AddDirectoryFullPathAndTryGetIt()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
+            fileSystem.CreateDirectory("/directory");
 
             if (fileSystem.TryGetFile("/directory", out var directory))
             {
@@ -44,8 +44,8 @@ namespace FileSystem.Tests
         public void AddTwoDirectoriesFullPath()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/test");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/test");
 
             if (fileSystem.TryGetFile("/directory", out var directory1))
             {
@@ -72,8 +72,8 @@ namespace FileSystem.Tests
         public void AddTwoDirectoriesRelativePath()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("directory");
-            fileSystem.AddDirectory("directory/test");
+            fileSystem.CreateDirectory("directory");
+            fileSystem.CreateDirectory("directory/test");
 
             if (fileSystem.TryGetFile("/directory", out var directory1))
             {
@@ -101,16 +101,16 @@ namespace FileSystem.Tests
         public void TryAddExistingDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("directory");
-            fileSystem.AddDirectory("directory");
+            fileSystem.CreateDirectory("directory");
+            fileSystem.CreateDirectory("directory");
         }
 
         [TestMethod]
         public void ChangeDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
 
             Assert.AreEqual("/", fileSystem.CurrentDirectoryPath);
 
@@ -139,8 +139,8 @@ namespace FileSystem.Tests
         public void ChangeDirectoryToEmpty()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
 
             fileSystem.ChangeDirectory("  ");
 
@@ -152,8 +152,8 @@ namespace FileSystem.Tests
         public void TryNavigateToInvalidDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
 
             fileSystem.ChangeDirectory("/directory1");
         }
@@ -162,10 +162,10 @@ namespace FileSystem.Tests
         public void ListDirectoryFullPath()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
-            fileSystem.AddDirectory("/directory/testDirectory1");
-            fileSystem.AddDirectory("/directory/testDirectory2");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory/testDirectory1");
+            fileSystem.CreateDirectory("/directory/testDirectory2");
 
             var listedDirectory = fileSystem.ListDirectory("/directory").ToList();
 
@@ -179,10 +179,10 @@ namespace FileSystem.Tests
         public void ListDirectoryRelative()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
-            fileSystem.AddDirectory("/directory/testDirectory1");
-            fileSystem.AddDirectory("/directory/testDirectory2");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory/testDirectory1");
+            fileSystem.CreateDirectory("/directory/testDirectory2");
 
             var listedDirectory = fileSystem.ListDirectory("directory").ToList();
 
@@ -196,8 +196,8 @@ namespace FileSystem.Tests
         public void ListEmptyDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
 
             var listedDirectory = fileSystem.ListDirectory("/directory/testDirectory").ToList();
 
@@ -208,8 +208,8 @@ namespace FileSystem.Tests
         public void ListCurrentDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
 
             var listedDirectory = fileSystem.ListDirectory("").ToList();
 
@@ -221,10 +221,10 @@ namespace FileSystem.Tests
         public void ListInvalidDirectory()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/testDirectory");
-            fileSystem.AddDirectory("/directory/testDirectory1");
-            fileSystem.AddDirectory("/directory/testDirectory2");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
+            fileSystem.CreateDirectory("/directory/testDirectory1");
+            fileSystem.CreateDirectory("/directory/testDirectory2");
 
             var listedDirectory = fileSystem.ListDirectory("/directory/123").ToList();
         }
@@ -233,7 +233,7 @@ namespace FileSystem.Tests
         public void RemoveContentFiles()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
+            fileSystem.CreateDirectory("/directory");
 
             if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
@@ -258,8 +258,8 @@ namespace FileSystem.Tests
         public void RemoveContentFilesFromDifferentDirectories()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
-            fileSystem.AddDirectory("/directory/directory1");
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/directory1");
             if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
                 if (fileSystem.TryGetFile("/directory/directory1", out var file1) && file1 is Directory directory1)
@@ -293,7 +293,7 @@ namespace FileSystem.Tests
         public void TryRemoveDirectoryWithRemoveContentFileFunction()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
+            fileSystem.CreateDirectory("/directory");
             var paths = new[] { "/directory" };
 
             fileSystem.RemoveContentFiles(paths);
@@ -304,7 +304,7 @@ namespace FileSystem.Tests
         public void TryRemoveMissingContentFile()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
+            fileSystem.CreateDirectory("/directory");
 
             if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
@@ -327,7 +327,7 @@ namespace FileSystem.Tests
         public void TryRemoveOneDirectoryOneContentFileWithRemoveContentFileFunction()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
+            fileSystem.CreateDirectory("/directory");
 
             if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
@@ -348,7 +348,7 @@ namespace FileSystem.Tests
         public void TryAddFileWithSameName()
         {
             var fileSystem = new Models.FileSystem();
-            fileSystem.AddDirectory("/directory");
+            fileSystem.CreateDirectory("/directory");
 
             if (fileSystem.TryGetFile("/directory", out var file) && file is Directory directory)
             {
@@ -359,6 +359,45 @@ namespace FileSystem.Tests
             {
                 Assert.Fail();
             }
+        }
+
+        [TestMethod]
+        public void CreateContentFile()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory("/directory");
+
+            fileSystem.CreateContentFile("/directory/test", "Hello.");
+
+            if (fileSystem.TryGetFile("/directory/test", out File file) && file is ContentFile contentFile)
+            {
+                Assert.IsTrue(string.Equals("Hello.", contentFile.Content));
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TryCreateContentFileIntoMissingDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory("/directory");
+
+            fileSystem.CreateContentFile("/directory1/test", "Hello.");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TryCreateContentFileWhenFileAlreadyExists()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory("/directory");
+
+            fileSystem.CreateContentFile("/directory/test", "Hello.");
+            fileSystem.CreateContentFile("/directory/test", "Hello.");
         }
     }
 }

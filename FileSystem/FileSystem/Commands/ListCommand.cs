@@ -37,6 +37,9 @@ namespace FileSystem.Commands
                     Console.Write(contentFile.Name + " ");
                 }
             }
+
+            Console.WriteLine();
+            Console.Write("$ ");
         }
     }
 }

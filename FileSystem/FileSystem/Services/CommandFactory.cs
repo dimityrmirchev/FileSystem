@@ -34,7 +34,17 @@ namespace FileSystem.Services
                 case "ls":
                     return new ListCommand(parameters);
                 case "rm":
+                    if (string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Rm command requires parameters.");
+                    }
                     return new RemoveCommand(parameters);
+                case "cat":
+                    if (string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Cat command requires parameters.");
+                    }
+                    return new ConcatenateCommand(parameters);
                 default:
                     throw new NotImplementedException();
             }

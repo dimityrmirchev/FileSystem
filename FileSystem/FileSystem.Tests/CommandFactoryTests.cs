@@ -13,8 +13,8 @@ namespace FileSystem.Tests
         {
             var factory = new CommandFactory();
             var command = factory.GetCommand("cd ../../test");
-            var changeDirectoryCommand = (ChangeDirectoryCommand) command;
-            
+            var changeDirectoryCommand = (ChangeDirectoryCommand)command;
+
             Assert.AreEqual("../../test", changeDirectoryCommand.Parameters);
         }
 
@@ -70,6 +70,42 @@ namespace FileSystem.Tests
             var listCommand = (ListCommand)command;
 
             Assert.AreEqual("", listCommand.Parameters);
+        }
+
+        [TestMethod]
+        public void CreateConcatenateCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("cat file1 > file2");
+            var listCommand = (ConcatenateCommand)command;
+
+            Assert.AreEqual("file1 > file2", listCommand.Parameters);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CreateEmptyConcatenateCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("cat");
+        }
+
+        [TestMethod]
+        public void CreateRemoveCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("rm file1 file2");
+            var listCommand = (RemoveCommand)command;
+
+            Assert.AreEqual("file1 file2", listCommand.Parameters);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CreateInvalidRemoveCommand()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("rm ");
         }
     }
 }

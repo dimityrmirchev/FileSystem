@@ -7,23 +7,22 @@ namespace FileSystem
     {
         static void Main(string[] args)
         {
+            var readLine = string.Empty;
             var fileSystem = new Models.FileSystem();
-
             var factory = new CommandFactory();
-            var command = factory.GetCommand("mkdir test");
-            command.Execute(fileSystem);
+            Console.Write("$ ");
+            while (!string.Equals(readLine, "exit"))
+            {
+                readLine = Console.ReadLine();
 
-            command = factory.GetCommand("cd test");
-            command.Execute(fileSystem);
+                if (string.IsNullOrWhiteSpace(readLine))
+                {
+                    continue;
+                }
 
-            command = factory.GetCommand("pwd");
-            command.Execute(fileSystem);
-
-            command = factory.GetCommand("cd ..");
-            command.Execute(fileSystem);
-
-            command = factory.GetCommand("ls");
-            command.Execute(fileSystem);
+                var command = factory.GetCommand(readLine);
+                command.Execute(fileSystem);
+            }
         }
     }
 }

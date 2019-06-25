@@ -14,7 +14,7 @@ namespace FileSystem.Commands
         {
             try
             {
-                fileSystem.AddDirectory(Parameters);
+                fileSystem.CreateDirectory(Parameters);
                 Console.Write("$ ");
             }
             catch (ArgumentException argumentException)

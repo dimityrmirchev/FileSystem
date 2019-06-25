@@ -17,14 +17,19 @@ namespace FileSystem.Models
 
         public string CurrentDirectoryPath => _currentDirectory.Path;
 
-        public void AddDirectory(string path)
+        public void CreateDirectory(string path)
         {
-            AddDirectory(path, !path.StartsWith('/'));
+            CreateDirectory(path, !path.StartsWith('/'));
         }
 
         public void ChangeDirectory(string path)
         {
             ChangeDirectory(path, !path.StartsWith('/'));
+        }
+
+        public void CreateContentFile(string path, string content)
+        {
+            CreateContentFile(path, !path.StartsWith('/'), content);
         }
 
         public IEnumerable<File> ListDirectory(string path)
@@ -75,7 +80,7 @@ namespace FileSystem.Models
             return TryGetFile(path, !path.StartsWith('/'), out file);
         }
 
-        private void AddDirectory(string path, bool isRelative)
+        private void CreateDirectory(string path, bool isRelative)
         {
             var lastIndex = path.LastIndexOf('/');
             if (lastIndex != -1)
@@ -83,7 +88,7 @@ namespace FileSystem.Models
                 var pathToAddTo = path.Substring(0, lastIndex + 1);
                 var newDirectoryName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
                 if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
-                    && !TryGetDirectory(path, isRelative, out Directory _))
+                    && !TryGetFile(path, isRelative, out File _))
                 {
                     var newDirectoryPath = directoryToAddTo.Path.EndsWith("/")
                         ? directoryToAddTo.Path + $"{newDirectoryName}"
@@ -98,7 +103,7 @@ namespace FileSystem.Models
             }
             else
             {
-                if (!TryGetDirectory(path, isRelative, out Directory _))
+                if (!TryGetFile(path, isRelative, out File _))
                 {
                     var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
                         ? _currentDirectory.Path + $"{path}"
@@ -126,6 +131,43 @@ namespace FileSystem.Models
             else
             {
                 throw new InvalidOperationException($"Cannot navigate to {path}");
+            }
+        }
+
+        private void CreateContentFile(string path, bool isRelative, string content)
+        {
+            var lastIndex = path.LastIndexOf('/');
+            if (lastIndex != -1)
+            {
+                var pathToAddTo = path.Substring(0, lastIndex + 1);
+                var newContentFileName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
+                if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
+                    && !TryGetFile(path, isRelative, out File _))
+                {
+                    var newContentFilePath = directoryToAddTo.Path.EndsWith("/")
+                        ? directoryToAddTo.Path + $"{newContentFileName}"
+                        : directoryToAddTo.Path + $"/{newContentFileName}";
+
+                    directoryToAddTo.AddChild(new ContentFile(newContentFilePath, content, directoryToAddTo));
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Cannot create content file {path}");
+                }
+            }
+            else
+            {
+                if (!TryGetFile(path, isRelative, out File _))
+                {
+                    var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
+                        ? _currentDirectory.Path + $"{path}"
+                        : _currentDirectory.Path + $"/{path}";
+                    _currentDirectory.AddChild(new ContentFile(newDirectoryPath, content, _currentDirectory));
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Cannot create content file {path}");
+                }
             }
         }
 
