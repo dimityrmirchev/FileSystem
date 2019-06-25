@@ -1,4 +1,6 @@
 ﻿using System;
+using FileSystem.Commands;
+using FileSystem.Exceptions;
 using FileSystem.Services;
 
 namespace FileSystem
@@ -21,7 +23,17 @@ namespace FileSystem
                     continue;
                 }
 
-                var command = factory.GetCommand(readLine);
+                ICommand command;
+                try
+                {
+                    command = factory.GetCommand(readLine);
+                }
+                catch (NotRecognizedCommandException commandException)
+                {
+                    Console.WriteLine(commandException.Message);
+                    continue;
+                }
+                
                 command.Execute(fileSystem);
             }
         }

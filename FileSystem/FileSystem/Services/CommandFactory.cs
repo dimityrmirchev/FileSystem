@@ -2,15 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using FileSystem.Commands;
+using FileSystem.Exceptions;
 
 namespace FileSystem.Services
 {
     public class CommandFactory
     {
-        public ICommand GetCommand(string job)
+        public ICommand GetCommand(string input)
         {
-            var commandName = GetCommandName(job);
-            var parameters = GetParameters(job);
+            var commandName = GetCommandName(input);
+            var parameters = GetParameters(input);
             switch (commandName)
             {
                 case "cd":
@@ -58,7 +59,7 @@ namespace FileSystem.Services
                     }
                     return new ExitCommand(parameters);
                 default:
-                    throw new NotImplementedException();
+                    throw new NotRecognizedCommandException($"{commandName} was not recognized as a valid command.");
             }
         }
 
