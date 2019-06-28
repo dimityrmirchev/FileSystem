@@ -61,7 +61,7 @@ namespace FileSystem.Services
             }
         }
 
-        private string GetCommandName(string job)
+        private static string GetCommandName(string job)
         {
             var trimmed = job.Trim();
             var commandLength = trimmed.IndexOf(' ') == -1
@@ -71,7 +71,7 @@ namespace FileSystem.Services
             return commandName;
         }
 
-        private string GetParameters(string job)
+        private static string GetParameters(string job)
         {
             var trimmed = job.Trim();
             var splitter = trimmed.IndexOf(' ');

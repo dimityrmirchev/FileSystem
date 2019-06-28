@@ -33,7 +33,7 @@ namespace FileSystem
                     Console.WriteLine(commandException.Message);
                     continue;
                 }
-                
+
                 command.Execute(fileSystem);
             }
         }
