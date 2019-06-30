@@ -69,6 +69,30 @@ namespace FileSystem.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TryAddDirectoryWithMissingPath()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory("/directory/test");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TryAddInvalidDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TryGetInvalidDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.TryGetFile(null, out File file);
+        }
+
+        [TestMethod]
         public void AddTwoDirectoriesRelativePath()
         {
             var fileSystem = new Models.FileSystem();
@@ -145,6 +169,42 @@ namespace FileSystem.Tests
             fileSystem.ChangeDirectory("  ");
 
             Assert.AreEqual("/", fileSystem.CurrentDirectoryPath);
+        }
+
+        [TestMethod]
+        public void ChangeDirectoryToNull()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory("/directory");
+            fileSystem.CreateDirectory("/directory/testDirectory");
+
+            fileSystem.ChangeDirectory(null);
+
+            Assert.AreEqual("/", fileSystem.CurrentDirectoryPath);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TryCreateInvalidContentFile()
+        {
+            var fileSystem = new Models.FileSystem();
+
+            if(fileSystem.TryGetFile("/", out File file) && file is Directory directory)
+            {
+                directory.AddChild(new ContentFile(null, "Test", directory));
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TryCreateNullDirectory()
+        {
+            var fileSystem = new Models.FileSystem();
+            fileSystem.CreateDirectory(null);
         }
 
         [TestMethod]

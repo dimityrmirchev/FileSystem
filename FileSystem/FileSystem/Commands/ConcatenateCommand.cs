@@ -9,7 +9,7 @@ namespace FileSystem.Commands
     {
         public ConcatenateCommand(string parameters)
         {
-            if (string.IsNullOrEmpty(parameters))
+            if (string.IsNullOrWhiteSpace(parameters))
             {
                 throw new ArgumentException("Cat command requires parameters.");
             }

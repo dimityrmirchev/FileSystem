@@ -19,16 +19,31 @@ namespace FileSystem.Models
 
         public void ChangeDirectory(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
             ChangeDirectory(path, !path.StartsWith('/'));
         }
 
         public void CreateContentFile(string path, string content)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException("Path cannot be null or whitespace.");
+            }
+
             CreateContentFile(path, !path.StartsWith('/'), content);
         }
 
         public void CreateDirectory(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException("Path cannot be null or whitespace.");
+            }
+
             CreateDirectory(path, !path.StartsWith('/'));
         }
 
@@ -49,6 +64,11 @@ namespace FileSystem.Models
 
         public void RemoveContentFiles(string[] paths)
         {
+            if (paths == null)
+            {
+                throw new ArgumentNullException("Value of paths cannot be null.");
+            }
+
             var filesToRemove = new List<ContentFile>();
             foreach (var path in paths)
             {
@@ -77,16 +97,16 @@ namespace FileSystem.Models
 
         public bool TryGetFile(string path, out File file)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException("Path cannot be null or whitespace.");
+            }
+
             return TryGetFile(path, !path.StartsWith('/'), out file);
         }
 
         private void ChangeDirectory(string path, bool isRelative)
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return;
-            }
-
             if (TryGetDirectory(path, isRelative, out Directory directory))
             {
                 _currentDirectory = directory;

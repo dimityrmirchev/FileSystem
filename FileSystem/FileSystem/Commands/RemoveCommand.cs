@@ -6,7 +6,7 @@ namespace FileSystem.Commands
     {
         public RemoveCommand(string paths)
         {
-            if (string.IsNullOrEmpty(paths))
+            if (string.IsNullOrWhiteSpace(paths))
             {
                 throw new ArgumentException("Rm command requires valid file paths.");
             }

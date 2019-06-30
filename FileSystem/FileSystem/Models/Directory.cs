@@ -15,12 +15,20 @@ namespace FileSystem.Models
 
         public void AddChild(File file)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file), "File cannot be null.");
+            }
+
             if (_children.FirstOrDefault(c => c.Path == file.Path) != null)
             {
                 throw new ArgumentException($"File {file.Path} already exists in the directory");
             }
 
-            _children.Add(file);
+            if (!_children.Contains(file))
+            {
+                _children.Add(file);
+            }
         }
 
         public IEnumerable<File> GetChildren()
@@ -30,7 +38,15 @@ namespace FileSystem.Models
 
         public void RemoveChild(File file)
         {
-            _children.Remove(file);
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file), "File cannot be null.");
+            }
+
+            if (_children.Contains(file))
+            {
+                _children.Remove(file);
+            }
         }
     }
 }

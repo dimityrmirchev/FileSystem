@@ -6,7 +6,7 @@ namespace FileSystem.Commands
     {
         public MakeDirectoryCommand(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentException("Mkdir command requires a valid directory path.");
             }

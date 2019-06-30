@@ -8,7 +8,7 @@ namespace FileSystem.Commands
     {
         public ListCommand(string directory)
         {
-            Directory = directory.Trim();
+            Directory = directory == null ? string.Empty : directory.Trim();
         }
 
         public string Directory { get; }

@@ -4,7 +4,7 @@
     {
         public ContentFile(string path, string content, Directory parent) : base(path, parent)
         {
-            Content = content;
+            Content = content ?? string.Empty;
         }
 
         public string Content { get; }

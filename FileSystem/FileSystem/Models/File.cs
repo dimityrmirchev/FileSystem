@@ -7,6 +7,11 @@ namespace FileSystem.Models
     {
         protected File(string path, Directory parent)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException("File path cannot be null or whitespace.");
+            }
+
             var fileName = path.Split('/').Last().TrimEnd();
             if (fileName.Split(' ').Length != 1)
             {

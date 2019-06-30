@@ -67,6 +67,20 @@ namespace FileSystem.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void TryRemoveInvalidFileFromDirectory()
+        {
+            var path = "/sample";
+            var directory = new Directory(path, null);
+            var contentFile = new ContentFile(path + "/test.txt", "Sample text.", directory);
+
+            directory.AddChild(new Directory(path + "/sample1", directory));
+            directory.AddChild(contentFile);
+
+            directory.RemoveChild(null);
+        }
+
+        [TestMethod]
         public void AddChildrenToDirectoryAndAssertParent()
         {
             var path = "/sample";
