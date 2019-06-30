@@ -4,7 +4,7 @@ using FileSystem.Models;
 
 namespace FileSystem.Commands
 {
-    public class ListCommand : Command
+    public sealed class ListCommand : Command
     {
         public ListCommand(string parameters) : base(parameters)
         {

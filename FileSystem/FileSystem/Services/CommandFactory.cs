@@ -18,12 +18,6 @@ namespace FileSystem.Services
                         throw new ArgumentException("Cd command requires parameters.");
                     }
                     return new ChangeDirectoryCommand(parameters);
-                case "mkdir":
-                    if (string.IsNullOrEmpty(parameters))
-                    {
-                        throw new ArgumentException("Mkdir command requires parameters.");
-                    }
-                    return new MakeDirectoryCommand(parameters);
                 case "pwd":
                     if (!string.IsNullOrEmpty(parameters))
                     {
@@ -32,18 +26,24 @@ namespace FileSystem.Services
                     return new PrintWorkingDirectoryCommand(parameters);
                 case "ls":
                     return new ListCommand(parameters);
-                case "rm":
+                case "mkdir":
                     if (string.IsNullOrEmpty(parameters))
                     {
-                        throw new ArgumentException("Rm command requires parameters.");
+                        throw new ArgumentException("Mkdir command requires parameters.");
                     }
-                    return new RemoveCommand(parameters);
+                    return new MakeDirectoryCommand(parameters);
                 case "cat":
                     if (string.IsNullOrEmpty(parameters))
                     {
                         throw new ArgumentException("Cat command requires parameters.");
                     }
                     return new ConcatenateCommand(parameters);
+                case "rm":
+                    if (string.IsNullOrEmpty(parameters))
+                    {
+                        throw new ArgumentException("Rm command requires parameters.");
+                    }
+                    return new RemoveCommand(parameters);
                 case "clear":
                     if (!string.IsNullOrEmpty(parameters))
                     {

@@ -5,7 +5,7 @@ using FileSystem.Models;
 
 namespace FileSystem.Commands
 {
-    public class ConcatenateCommand : Command
+    public sealed class ConcatenateCommand : Command
     {
         public ConcatenateCommand(string parameters) : base(parameters)
         {

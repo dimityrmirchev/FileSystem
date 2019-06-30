@@ -2,7 +2,7 @@
 
 namespace FileSystem.Commands
 {
-    public class ChangeDirectoryCommand : Command
+    public sealed class ChangeDirectoryCommand : Command
     {
         public ChangeDirectoryCommand(string path) : base(path)
         {

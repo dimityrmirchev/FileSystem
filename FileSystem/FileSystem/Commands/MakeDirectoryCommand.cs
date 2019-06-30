@@ -2,7 +2,7 @@
 
 namespace FileSystem.Commands
 {
-    public class MakeDirectoryCommand : Command
+    public sealed class MakeDirectoryCommand : Command
     {
         public MakeDirectoryCommand(string parameters) : base(parameters)
         {

@@ -2,7 +2,7 @@
 
 namespace FileSystem.Commands
 {
-    public class PrintWorkingDirectoryCommand : Command
+    public sealed class PrintWorkingDirectoryCommand : Command
     {
         public PrintWorkingDirectoryCommand(string parameters) : base(parameters)
         {

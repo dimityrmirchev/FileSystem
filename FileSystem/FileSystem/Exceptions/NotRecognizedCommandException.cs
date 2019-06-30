@@ -2,7 +2,7 @@
 
 namespace FileSystem.Exceptions
 {
-    public class NotRecognizedCommandException : Exception
+    public sealed class NotRecognizedCommandException : Exception
     {
         public NotRecognizedCommandException(string message) : base(message)
         {

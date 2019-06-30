@@ -17,11 +17,6 @@ namespace FileSystem.Models
 
         public string CurrentDirectoryPath => _currentDirectory.Path;
 
-        public void CreateDirectory(string path)
-        {
-            CreateDirectory(path, !path.StartsWith('/'));
-        }
-
         public void ChangeDirectory(string path)
         {
             ChangeDirectory(path, !path.StartsWith('/'));
@@ -30,6 +25,11 @@ namespace FileSystem.Models
         public void CreateContentFile(string path, string content)
         {
             CreateContentFile(path, !path.StartsWith('/'), content);
+        }
+
+        public void CreateDirectory(string path)
+        {
+            CreateDirectory(path, !path.StartsWith('/'));
         }
 
         public IEnumerable<File> ListDirectory(string path)
@@ -80,43 +80,6 @@ namespace FileSystem.Models
             return TryGetFile(path, !path.StartsWith('/'), out file);
         }
 
-        private void CreateDirectory(string path, bool isRelative)
-        {
-            var lastIndex = path.LastIndexOf('/');
-            if (lastIndex != -1)
-            {
-                var pathToAddTo = path.Substring(0, lastIndex + 1);
-                var newDirectoryName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
-                if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
-                    && !TryGetFile(path, isRelative, out File _))
-                {
-                    var newDirectoryPath = directoryToAddTo.Path.EndsWith("/")
-                        ? directoryToAddTo.Path + $"{newDirectoryName}"
-                        : directoryToAddTo.Path + $"/{newDirectoryName}";
-
-                    directoryToAddTo.AddChild(new Directory(newDirectoryPath, directoryToAddTo));
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Cannot create directory {path}");
-                }
-            }
-            else
-            {
-                if (!TryGetFile(path, isRelative, out File _))
-                {
-                    var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
-                        ? _currentDirectory.Path + $"{path}"
-                        : _currentDirectory.Path + $"/{path}";
-                    _currentDirectory.AddChild(new Directory(newDirectoryPath, _currentDirectory));
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Cannot create directory {path}");
-                }
-            }
-        }
-
         private void ChangeDirectory(string path, bool isRelative)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -159,10 +122,10 @@ namespace FileSystem.Models
             {
                 if (!TryGetFile(path, isRelative, out File _))
                 {
-                    var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
+                    var newContentFilePath = _currentDirectory.Path.EndsWith("/")
                         ? _currentDirectory.Path + $"{path}"
                         : _currentDirectory.Path + $"/{path}";
-                    _currentDirectory.AddChild(new ContentFile(newDirectoryPath, content, _currentDirectory));
+                    _currentDirectory.AddChild(new ContentFile(newContentFilePath, content, _currentDirectory));
                 }
                 else
                 {
@@ -171,7 +134,44 @@ namespace FileSystem.Models
             }
         }
 
-        private void RemoveFile(File file)
+        private void CreateDirectory(string path, bool isRelative)
+        {
+            var lastIndex = path.LastIndexOf('/');
+            if (lastIndex != -1)
+            {
+                var pathToAddTo = path.Substring(0, lastIndex + 1);
+                var newDirectoryName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
+                if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
+                    && !TryGetFile(path, isRelative, out File _))
+                {
+                    var newDirectoryPath = directoryToAddTo.Path.EndsWith("/")
+                        ? directoryToAddTo.Path + $"{newDirectoryName}"
+                        : directoryToAddTo.Path + $"/{newDirectoryName}";
+
+                    directoryToAddTo.AddChild(new Directory(newDirectoryPath, directoryToAddTo));
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Cannot create directory {path}");
+                }
+            }
+            else
+            {
+                if (!TryGetFile(path, isRelative, out File _))
+                {
+                    var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
+                        ? _currentDirectory.Path + $"{path}"
+                        : _currentDirectory.Path + $"/{path}";
+                    _currentDirectory.AddChild(new Directory(newDirectoryPath, _currentDirectory));
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Cannot create directory {path}");
+                }
+            }
+        }
+
+        private static void RemoveFile(File file)
         {
             if (file is ContentFile contentFile)
             {

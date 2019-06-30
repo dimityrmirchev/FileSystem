@@ -2,7 +2,7 @@
 
 namespace FileSystem.Commands
 {
-    public class ClearCommand : Command
+    public sealed class ClearCommand : Command
     {
         public ClearCommand(string parameters) : base(parameters)
         {

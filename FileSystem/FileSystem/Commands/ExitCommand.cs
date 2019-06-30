@@ -1,6 +1,6 @@
 ﻿namespace FileSystem.Commands
 {
-    public class ExitCommand : Command
+    public sealed class ExitCommand : Command
     {
         public ExitCommand(string parameters) : base(parameters)
         {

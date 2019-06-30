@@ -5,17 +5,17 @@ using FileSystem.Services;
 
 namespace FileSystem
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var readLine = string.Empty;
             var fileSystem = new Models.FileSystem();
             var factory = new CommandFactory();
+
             while (!string.Equals(readLine, "exit"))
             {
                 Console.Write("$ ");
-
                 readLine = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(readLine))
@@ -27,6 +27,11 @@ namespace FileSystem
                 try
                 {
                     command = factory.GetCommand(readLine);
+                }
+                catch (ArgumentException argumentException)
+                {
+                    Console.WriteLine(argumentException.Message);
+                    continue;
                 }
                 catch (NotRecognizedCommandException commandException)
                 {

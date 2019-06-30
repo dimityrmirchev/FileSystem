@@ -2,7 +2,7 @@
 
 namespace FileSystem.Commands
 {
-    public class RemoveCommand : Command
+    public sealed class RemoveCommand : Command
     {
         public RemoveCommand(string parameters) : base(parameters)
         {
