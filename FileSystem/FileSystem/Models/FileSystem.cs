@@ -60,7 +60,7 @@ namespace FileSystem.Models
                     }
                     else
                     {
-                        throw new InvalidOperationException($"{file.Path} is not a content file");
+                        throw new InvalidOperationException($"{file.Path} is not a content file.");
                     }
                 }
                 else
@@ -184,7 +184,7 @@ namespace FileSystem.Models
                 }
                 else
                 {
-                    throw new InvalidOperationException($"{file.Path} is not an empty directory and cannot be deleted");
+                    throw new InvalidOperationException($"{file.Path} is not an empty directory and cannot be deleted.");
                 }
             }
         }

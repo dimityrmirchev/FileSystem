@@ -23,7 +23,10 @@ namespace FileSystem.Commands
 
         public override void Execute(Models.FileSystem fileSystem)
         {
-            if (InputFiles.Any() && !string.IsNullOrWhiteSpace(OutputFile))
+            var hasInputFiles = InputFiles.Any();
+            var hasOutputFile = !string.IsNullOrWhiteSpace(OutputFile);
+
+            if (hasInputFiles && hasOutputFile)
             {
                 try
                 {
@@ -39,7 +42,7 @@ namespace FileSystem.Commands
                     Console.WriteLine(argumentException.Message);
                 }
             }
-            else if (InputFiles.Any() && string.Equals(OutputFile, string.Empty))
+            else if (hasInputFiles)
             {
                 try
                 {
@@ -51,7 +54,7 @@ namespace FileSystem.Commands
                     Console.WriteLine(operationException.Message);
                 }
             }
-            else if (!InputFiles.Any() && !string.IsNullOrWhiteSpace(OutputFile))
+            else if (hasOutputFile)
             {
                 var userInput = ReadUserInput();
 
@@ -67,6 +70,10 @@ namespace FileSystem.Commands
                 {
                     Console.WriteLine(argumentException.Message);
                 }
+            }
+            else
+            {
+                Console.WriteLine("Couldn't execute cat command. Please check the validity of the passed parameters.");
             }
         }
 
@@ -110,7 +117,7 @@ namespace FileSystem.Commands
             }
             else
             {
-                throw new ArgumentException("Invalid parameters for cat command");
+                throw new ArgumentException("Invalid parameters for cat command.");
             }
         }
 
