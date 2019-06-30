@@ -93,7 +93,7 @@ namespace FileSystem.Commands
         {
             var splitParameters = parameters.Split('>').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
-            if (splitParameters.Length == 2 && ContainsSymbolCount(parameters, '>') == 1)
+            if (splitParameters.Length == 2 && GetOccurrencesCount(parameters, '>') == 1)
             {
                 InputFiles = splitParameters[0].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
                 OutputFile = splitParameters[1].Trim();
@@ -132,10 +132,10 @@ namespace FileSystem.Commands
             return stringBuilder.ToString();
         }
 
-        private static int ContainsSymbolCount(string input, char symbol)
+        private static int GetOccurrencesCount(string text, char symbol)
         {
             var count = 0;
-            foreach (var c in input)
+            foreach (var c in text)
             {
                 if (c == symbol)
                 {

@@ -13,13 +13,15 @@ namespace FileSystem.Models
                 throw new ArgumentException($"Invalid file name: {fileName}");
             }
 
-            Path = path;
             Name = fileName;
             Parent = parent;
+            Path = path;
         }
 
-        public string Path { get; }
         public string Name { get; }
+
         public Directory Parent { get; }
+
+        public string Path { get; }
     }
 }

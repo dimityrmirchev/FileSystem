@@ -108,10 +108,7 @@ namespace FileSystem.Models
                 if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
                     && !TryGetFile(path, isRelative, out File _))
                 {
-                    var newContentFilePath = directoryToAddTo.Path.EndsWith("/")
-                        ? directoryToAddTo.Path + $"{newContentFileName}"
-                        : directoryToAddTo.Path + $"/{newContentFileName}";
-
+                    var newContentFilePath = GetNewFilePath(directoryToAddTo.Path, newContentFileName);
                     directoryToAddTo.AddChild(new ContentFile(newContentFilePath, content, directoryToAddTo));
                 }
                 else
@@ -123,9 +120,7 @@ namespace FileSystem.Models
             {
                 if (!TryGetFile(path, isRelative, out File _))
                 {
-                    var newContentFilePath = _currentDirectory.Path.EndsWith("/")
-                        ? _currentDirectory.Path + $"{path}"
-                        : _currentDirectory.Path + $"/{path}";
+                    var newContentFilePath = GetNewFilePath(_currentDirectory.Path, path);
                     _currentDirectory.AddChild(new ContentFile(newContentFilePath, content, _currentDirectory));
                 }
                 else
@@ -146,10 +141,7 @@ namespace FileSystem.Models
                 if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
                     && !TryGetFile(path, isRelative, out File _))
                 {
-                    var newDirectoryPath = directoryToAddTo.Path.EndsWith("/")
-                        ? directoryToAddTo.Path + $"{newDirectoryName}"
-                        : directoryToAddTo.Path + $"/{newDirectoryName}";
-
+                    var newDirectoryPath = GetNewFilePath(directoryToAddTo.Path, newDirectoryName);
                     directoryToAddTo.AddChild(new Directory(newDirectoryPath, directoryToAddTo));
                 }
                 else
@@ -161,9 +153,7 @@ namespace FileSystem.Models
             {
                 if (!TryGetFile(path, isRelative, out File _))
                 {
-                    var newDirectoryPath = _currentDirectory.Path.EndsWith("/")
-                        ? _currentDirectory.Path + $"{path}"
-                        : _currentDirectory.Path + $"/{path}";
+                    var newDirectoryPath = GetNewFilePath(_currentDirectory.Path, path);
                     _currentDirectory.AddChild(new Directory(newDirectoryPath, _currentDirectory));
                 }
                 else
@@ -171,6 +161,13 @@ namespace FileSystem.Models
                     throw new InvalidOperationException($"Cannot create directory {path}");
                 }
             }
+        }
+
+        private static string GetNewFilePath(string pathToAddTo, string fileName)
+        {
+            return pathToAddTo.EndsWith("/")
+                ? pathToAddTo + $"{fileName}"
+                : pathToAddTo + $"/{fileName}";
         }
 
         private static void RemoveFile(File file)

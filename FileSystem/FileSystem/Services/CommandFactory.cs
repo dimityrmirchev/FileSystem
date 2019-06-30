@@ -4,7 +4,7 @@ using FileSystem.Exceptions;
 
 namespace FileSystem.Services
 {
-    public class CommandFactory
+    public sealed class CommandFactory
     {
         public ICommand GetCommand(string input)
         {
