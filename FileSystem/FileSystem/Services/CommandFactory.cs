@@ -46,25 +46,25 @@ namespace FileSystem.Services
             }
         }
 
-        private static string GetCommandName(string job)
+        private static string GetCommandName(string input)
         {
-            var trimmed = job.Trim();
-            var commandLength = trimmed.IndexOf(' ') == -1
-                ? trimmed.Length
-                : trimmed.IndexOf(' ');
-            var commandName = trimmed.Substring(0, commandLength);
+            var trimmedInput = input.Trim();
+            var commandLength = trimmedInput.IndexOf(' ') == -1
+                ? trimmedInput.Length
+                : trimmedInput.IndexOf(' ');
+            var commandName = trimmedInput.Substring(0, commandLength);
 
             return commandName;
         }
 
-        private static string GetParameters(string job)
+        private static string GetParameters(string input)
         {
-            var trimmed = job.Trim();
-            var splitter = trimmed.IndexOf(' ');
+            var trimmedInput = input.Trim();
+            var splitter = trimmedInput.IndexOf(' ');
 
             return splitter == -1
                 ? string.Empty
-                : trimmed.Substring(splitter + 1, trimmed.Length - splitter - 1).Trim();
+                : trimmedInput.Substring(splitter + 1, trimmedInput.Length - splitter - 1).Trim();
         }
     }
 }
