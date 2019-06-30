@@ -18,7 +18,7 @@ namespace FileSystem.Services
                 case "pwd":
                     if (!string.IsNullOrEmpty(parameters))
                     {
-                        throw new ArgumentException("Pwd command does not support parameters.");
+                        throw new ArgumentException("The \"pwd\" command does not support parameters.");
                     }
                     return new PrintWorkingDirectoryCommand();
                 case "ls":
@@ -32,13 +32,13 @@ namespace FileSystem.Services
                 case "clear":
                     if (!string.IsNullOrEmpty(parameters))
                     {
-                        throw new ArgumentException("Clear command does not support parameters.");
+                        throw new ArgumentException("The \"clear\" command does not support parameters.");
                     }
                     return new ClearCommand();
                 case "exit":
                     if (!string.IsNullOrEmpty(parameters))
                     {
-                        throw new ArgumentException("Exit command does not support parameters.");
+                        throw new ArgumentException("The \"exit\" command does not support parameters.");
                     }
                     return new ExitCommand();
                 default:

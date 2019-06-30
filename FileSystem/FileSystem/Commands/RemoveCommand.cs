@@ -8,7 +8,7 @@ namespace FileSystem.Commands
         {
             if (string.IsNullOrWhiteSpace(paths))
             {
-                throw new ArgumentException("Rm command requires valid file paths.");
+                throw new ArgumentException("The \"rm\" command requires valid file paths.");
             }
 
             Paths = paths.Split(' ');

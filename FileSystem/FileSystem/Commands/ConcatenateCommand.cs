@@ -11,7 +11,7 @@ namespace FileSystem.Commands
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                throw new ArgumentException("Cat command requires parameters.");
+                throw new ArgumentException("The \"cat\" command requires parameters.");
             }
 
             ParseParameters(parameters.Trim());

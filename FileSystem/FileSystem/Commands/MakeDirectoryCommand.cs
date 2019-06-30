@@ -8,7 +8,7 @@ namespace FileSystem.Commands
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentException("Mkdir command requires a valid directory path.");
+                throw new ArgumentException("The \"mkdir\" command requires a valid directory path.");
             }
 
             Path = path.Trim();

@@ -8,7 +8,7 @@ namespace FileSystem.Commands
         { 
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentException("Cd command requires a valid path.");
+                throw new ArgumentException("The \"cd\" command requires a valid path.");
             }
 
             Path = path.Trim();
