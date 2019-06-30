@@ -117,11 +117,15 @@ namespace FileSystem.Commands
         private static string ReadUserInput()
         {
             var stringBuilder = new StringBuilder();
-            var readLine = string.Empty;
 
-            while (!string.Equals(readLine?.Trim(), "."))
+            while (true)
             {
-                readLine = Console.ReadLine();
+                var readLine = Console.ReadLine();
+                if (string.Equals(readLine?.Trim(), "."))
+                {
+                    break;
+                }
+
                 stringBuilder.AppendLine(readLine);
             }
 
