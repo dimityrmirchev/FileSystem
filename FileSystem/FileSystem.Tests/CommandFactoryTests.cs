@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FileSystem.Commands;
 using FileSystem.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +16,7 @@ namespace FileSystem.Tests
             var command = factory.GetCommand("cd ../../test");
             var changeDirectoryCommand = (ChangeDirectoryCommand)command;
 
-            Assert.AreEqual("../../test", changeDirectoryCommand.Parameters);
+            Assert.AreEqual("../../test", changeDirectoryCommand.Path);
         }
 
         [TestMethod]
@@ -33,7 +34,7 @@ namespace FileSystem.Tests
             var command = factory.GetCommand("mkdir ../../test");
             var makeDirectoryCommand = (MakeDirectoryCommand)command;
 
-            Assert.AreEqual("../../test", makeDirectoryCommand.Parameters);
+            Assert.AreEqual("../../test", makeDirectoryCommand.Path);
         }
 
         [TestMethod]
@@ -50,8 +51,6 @@ namespace FileSystem.Tests
             var factory = new CommandFactory();
             var command = factory.GetCommand("pwd");
             var printWorkingDirectoryCommand = (PrintWorkingDirectoryCommand)command;
-
-            Assert.AreEqual("", printWorkingDirectoryCommand.Parameters);
         }
 
         [TestMethod]
@@ -69,17 +68,54 @@ namespace FileSystem.Tests
             var command = factory.GetCommand("ls");
             var listCommand = (ListCommand)command;
 
-            Assert.AreEqual("", listCommand.Parameters);
+            Assert.AreEqual("", listCommand.Directory);
+        }
+
+
+        [TestMethod]
+        public void CreateListCommandForSpecificDirectory()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("ls /test/directory");
+            var listCommand = (ListCommand)command;
+
+            Assert.AreEqual("/test/directory", listCommand.Directory);
         }
 
         [TestMethod]
         public void CreateConcatenateCommand()
         {
             var factory = new CommandFactory();
-            var command = factory.GetCommand("cat file1 > file2");
-            var listCommand = (ConcatenateCommand)command;
+            var command = factory.GetCommand("cat file1 file3 > file2");
+            var concatenateCommand = (ConcatenateCommand)command;
 
-            Assert.AreEqual("file1 > file2", listCommand.Parameters);
+            Assert.AreEqual("file2", concatenateCommand.OutputFile);
+            Assert.IsTrue(concatenateCommand.InputFiles.Length == 2);
+            Assert.IsTrue(concatenateCommand.InputFiles.Contains("file1"));
+            Assert.IsTrue(concatenateCommand.InputFiles.Contains("file3"));
+        }
+
+        [TestMethod]
+        public void CreateConcatenateCommandWithoutOutputFile()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("cat file1 file2");
+            var concatenateCommand = (ConcatenateCommand)command;
+
+            Assert.IsTrue(concatenateCommand.InputFiles.Length == 2);
+            Assert.IsTrue(concatenateCommand.InputFiles.Contains("file1"));
+            Assert.IsTrue(concatenateCommand.InputFiles.Contains("file2"));
+        }
+
+        [TestMethod]
+        public void CreateConcatenateCommandWithoutInputFile()
+        {
+            var factory = new CommandFactory();
+            var command = factory.GetCommand("cat > outputFile");
+            var concatenateCommand = (ConcatenateCommand) command;
+
+            Assert.IsTrue(!concatenateCommand.InputFiles.Any());
+            Assert.IsTrue(string.Equals(concatenateCommand.OutputFile, "outputFile"));
         }
 
         [TestMethod]
@@ -95,9 +131,11 @@ namespace FileSystem.Tests
         {
             var factory = new CommandFactory();
             var command = factory.GetCommand("rm file1 file2");
-            var listCommand = (RemoveCommand)command;
+            var removeCommand = (RemoveCommand)command;
 
-            Assert.AreEqual("file1 file2", listCommand.Parameters);
+            Assert.IsTrue(removeCommand.Paths.Length == 2);
+            Assert.IsTrue(removeCommand.Paths.Contains("file1"));
+            Assert.IsTrue(removeCommand.Paths.Contains("file2"));
         }
 
         [TestMethod]
@@ -113,9 +151,7 @@ namespace FileSystem.Tests
         {
             var factory = new CommandFactory();
             var command = factory.GetCommand("clear");
-            var listCommand = (ClearCommand)command;
-
-            Assert.AreEqual("", listCommand.Parameters);
+            var clearCommand = (ClearCommand)command;
         }
 
         [TestMethod]
@@ -131,9 +167,7 @@ namespace FileSystem.Tests
         {
             var factory = new CommandFactory();
             var command = factory.GetCommand("exit");
-            var listCommand = (ExitCommand)command;
-
-            Assert.AreEqual("", listCommand.Parameters);
+            var exitCommand = (ExitCommand) command;
         }
 
         [TestMethod]

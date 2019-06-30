@@ -10,52 +10,37 @@ namespace FileSystem.Services
         {
             var commandName = GetCommandName(input);
             var parameters = GetParameters(input);
+
             switch (commandName)
             {
                 case "cd":
-                    if (string.IsNullOrEmpty(parameters))
-                    {
-                        throw new ArgumentException("Cd command requires parameters.");
-                    }
                     return new ChangeDirectoryCommand(parameters);
                 case "pwd":
                     if (!string.IsNullOrEmpty(parameters))
                     {
                         throw new ArgumentException("Pwd command does not support parameters.");
                     }
-                    return new PrintWorkingDirectoryCommand(parameters);
+                    return new PrintWorkingDirectoryCommand();
                 case "ls":
                     return new ListCommand(parameters);
                 case "mkdir":
-                    if (string.IsNullOrEmpty(parameters))
-                    {
-                        throw new ArgumentException("Mkdir command requires parameters.");
-                    }
                     return new MakeDirectoryCommand(parameters);
                 case "cat":
-                    if (string.IsNullOrEmpty(parameters))
-                    {
-                        throw new ArgumentException("Cat command requires parameters.");
-                    }
                     return new ConcatenateCommand(parameters);
                 case "rm":
-                    if (string.IsNullOrEmpty(parameters))
-                    {
-                        throw new ArgumentException("Rm command requires parameters.");
-                    }
                     return new RemoveCommand(parameters);
                 case "clear":
                     if (!string.IsNullOrEmpty(parameters))
                     {
                         throw new ArgumentException("Clear command does not support parameters.");
                     }
-                    return new ClearCommand(parameters);
+                    return new ClearCommand();
                 case "exit":
                     if (!string.IsNullOrEmpty(parameters))
                     {
                         throw new ArgumentException("Exit command does not support parameters.");
                     }
-                    return new ExitCommand(parameters);
+                    return new ExitCommand();
                 default:
                     throw new NotRecognizedCommandException($"{commandName} was not recognized as a valid command.");
             }
@@ -68,6 +53,7 @@ namespace FileSystem.Services
                 ? trimmed.Length
                 : trimmed.IndexOf(' ');
             var commandName = trimmed.Substring(0, commandLength);
+
             return commandName;
         }
 
@@ -75,6 +61,7 @@ namespace FileSystem.Services
         {
             var trimmed = job.Trim();
             var splitter = trimmed.IndexOf(' ');
+
             return splitter == -1
                 ? string.Empty
                 : trimmed.Substring(splitter + 1, trimmed.Length - splitter - 1).Trim();

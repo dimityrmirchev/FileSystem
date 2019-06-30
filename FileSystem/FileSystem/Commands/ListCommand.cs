@@ -6,16 +6,19 @@ namespace FileSystem.Commands
 {
     public sealed class ListCommand : Command
     {
-        public ListCommand(string parameters) : base(parameters)
+        public ListCommand(string directory)
         {
+            Directory = directory.Trim();
         }
+
+        public string Directory { get; }
 
         public override void Execute(Models.FileSystem fileSystem)
         {
             IEnumerable<File> fileList;
             try
             {
-                fileList = fileSystem.ListDirectory(Parameters);
+                fileList = fileSystem.ListDirectory(Directory);
             }
             catch (InvalidOperationException exception)
             {

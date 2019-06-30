@@ -4,15 +4,23 @@ namespace FileSystem.Commands
 {
     public sealed class MakeDirectoryCommand : Command
     {
-        public MakeDirectoryCommand(string parameters) : base(parameters)
+        public MakeDirectoryCommand(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Mkdir command requires a valid directory path.");
+            }
+
+            Path = path.Trim();
         }
+
+        public string Path { get; }
 
         public override void Execute(Models.FileSystem fileSystem)
         {
             try
             {
-                fileSystem.CreateDirectory(Parameters);
+                fileSystem.CreateDirectory(Path);
             }
             catch (ArgumentException argumentException)
             {

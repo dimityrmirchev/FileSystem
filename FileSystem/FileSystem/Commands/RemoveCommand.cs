@@ -4,17 +4,23 @@ namespace FileSystem.Commands
 {
     public sealed class RemoveCommand : Command
     {
-        public RemoveCommand(string parameters) : base(parameters)
+        public RemoveCommand(string paths)
         {
+            if (string.IsNullOrEmpty(paths))
+            {
+                throw new ArgumentException("Rm command requires valid file paths.");
+            }
+
+            Paths = paths.Split(' ');
         }
+
+        public string[] Paths { get; }
 
         public override void Execute(Models.FileSystem fileSystem)
         {
-            var filePaths = Parameters.Split(' ');
-
             try
             {
-                fileSystem.RemoveContentFiles(filePaths);
+                fileSystem.RemoveContentFiles(Paths);
             }
             catch (InvalidOperationException invalidOperationException)
             {

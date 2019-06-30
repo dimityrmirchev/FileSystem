@@ -7,39 +7,74 @@ namespace FileSystem.Commands
 {
     public sealed class ConcatenateCommand : Command
     {
-        public ConcatenateCommand(string parameters) : base(parameters)
+        public ConcatenateCommand(string parameters)
         {
+            if (string.IsNullOrEmpty(parameters))
+            {
+                throw new ArgumentException("Cat command requires parameters.");
+            }
+
+            ParseParameters(parameters.Trim());
         }
+
+        public string[] InputFiles { get; private set; }
+
+        public string OutputFile { get; private set; }
 
         public override void Execute(Models.FileSystem fileSystem)
         {
-            var splitParameters = Parameters.Split('>').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-            if (splitParameters.Length == 2)
+            if (InputFiles.Any() && !string.IsNullOrWhiteSpace(OutputFile))
             {
-                ConcatenateInputFilesIntoOutputFile(splitParameters, fileSystem);
-                return;
+                try
+                {
+                    var concatenatedContent = ConcatenateFiles(fileSystem);
+                    fileSystem.CreateContentFile(OutputFile, concatenatedContent);
+                }
+                catch (InvalidOperationException operationException)
+                {
+                    Console.WriteLine(operationException.Message);
+                }
+                catch (ArgumentException argumentException)
+                {
+                    Console.WriteLine(argumentException.Message);
+                }
             }
-
-            if (splitParameters.Length == 1 && Parameters.Contains('>'))
+            else if (InputFiles.Any() && string.Equals(OutputFile, string.Empty))
             {
-                var outputFilePath = splitParameters[0].Trim();
-                ReadInputAndOutContentIntoFile(outputFilePath, fileSystem);
-                return;
+                try
+                {
+                    var concatenatedContent = ConcatenateFiles(fileSystem);
+                    Console.Write(concatenatedContent);
+                }
+                catch (InvalidOperationException operationException)
+                {
+                    Console.WriteLine(operationException.Message);
+                }
             }
-
-            if (splitParameters.Length == 1 && !Parameters.Contains('>'))
+            else if (!InputFiles.Any() && !string.IsNullOrWhiteSpace(OutputFile))
             {
-                var inputFilesPaths = splitParameters[0].Trim().Split(' ');
-                ConcatenateFilesAndOutContentToConsole(inputFilesPaths, fileSystem);
+                var userInput = ReadUserInput();
+
+                try
+                {
+                    fileSystem.CreateContentFile(OutputFile, userInput);
+                }
+                catch (InvalidOperationException operationException)
+                {
+                    Console.WriteLine(operationException.Message);
+                }
+                catch (ArgumentException argumentException)
+                {
+                    Console.WriteLine(argumentException.Message);
+                }
             }
         }
 
-        private void ConcatenateInputFilesIntoOutputFile(string[] splitParameters, Models.FileSystem fileSystem)
+        private string ConcatenateFiles(Models.FileSystem fileSystem)
         {
-            var inputFilesPaths = splitParameters[0].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray(); ;
             var stringBuilder = new StringBuilder();
 
-            foreach (var path in inputFilesPaths)
+            foreach (var path in InputFiles)
             {
                 if (fileSystem.TryGetFile(path.Trim(), out File file) && file is ContentFile contentFile)
                 {
@@ -47,27 +82,39 @@ namespace FileSystem.Commands
                 }
                 else
                 {
-                    Console.WriteLine($"File {path} couldn't be found");
-                    return;
+                    throw new InvalidOperationException($"File {path} couldn't be found");
                 }
             }
 
-            var outputFilePath = splitParameters[1].Trim();
-            try
+            return stringBuilder.ToString();
+        }
+
+        private void ParseParameters(string parameters)
+        {
+            var splitParameters = parameters.Split('>').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+
+            if (splitParameters.Length == 2 && ContainsSymbolCount(parameters, '>') == 1)
             {
-                fileSystem.CreateContentFile(outputFilePath, stringBuilder.ToString());
+                InputFiles = splitParameters[0].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                OutputFile = splitParameters[1].Trim();
             }
-            catch (InvalidOperationException operationException)
+            else if (splitParameters.Length == 1 && parameters.Contains('>') && parameters.StartsWith('>'))
             {
-                Console.WriteLine(operationException.Message);
+                InputFiles = new string[0];
+                OutputFile = splitParameters[0].Trim();
             }
-            catch (ArgumentException argumentException)
+            else if (splitParameters.Length == 1 && !parameters.Contains('>'))
             {
-                Console.WriteLine(argumentException.Message);
+                InputFiles = splitParameters[0].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                OutputFile = string.Empty;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid parameters for cat command");
             }
         }
 
-        private void ReadInputAndOutContentIntoFile(string outputFilePath, Models.FileSystem fileSystem)
+        private static string ReadUserInput()
         {
             var stringBuilder = new StringBuilder();
             var readLine = string.Empty;
@@ -78,38 +125,21 @@ namespace FileSystem.Commands
                 stringBuilder.AppendLine(readLine);
             }
 
-            try
-            {
-                fileSystem.CreateContentFile(outputFilePath, stringBuilder.ToString());
-            }
-            catch (InvalidOperationException operationException)
-            {
-                Console.WriteLine(operationException.Message);
-            }
-            catch (ArgumentException argumentException)
-            {
-                Console.WriteLine(argumentException.Message);
-            }
+            return stringBuilder.ToString();
         }
 
-        private void ConcatenateFilesAndOutContentToConsole(string[] inputFilesPaths, Models.FileSystem fileSystem)
+        private static int ContainsSymbolCount(string input, char symbol)
         {
-            var stringBuilder = new StringBuilder();
-
-            foreach (var path in inputFilesPaths)
+            var count = 0;
+            foreach (var c in input)
             {
-                if (fileSystem.TryGetFile(path.Trim(), out File file) && file is ContentFile contentFile)
+                if (c == symbol)
                 {
-                    stringBuilder.AppendLine(contentFile.Content);
-                }
-                else
-                {
-                    Console.WriteLine($"File {path} couldn't be found");
-                    return;
+                    count++;
                 }
             }
 
-            Console.Write(stringBuilder.ToString());
+            return count;
         }
     }
 }

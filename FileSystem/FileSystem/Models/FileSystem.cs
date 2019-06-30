@@ -104,6 +104,7 @@ namespace FileSystem.Models
             {
                 var pathToAddTo = path.Substring(0, lastIndex + 1);
                 var newContentFileName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
+
                 if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
                     && !TryGetFile(path, isRelative, out File _))
                 {
@@ -141,6 +142,7 @@ namespace FileSystem.Models
             {
                 var pathToAddTo = path.Substring(0, lastIndex + 1);
                 var newDirectoryName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
+
                 if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo)
                     && !TryGetFile(path, isRelative, out File _))
                 {
@@ -211,7 +213,6 @@ namespace FileSystem.Models
             }
 
             var pathToTraverse = path.Split('/').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-
             if (pathToTraverse.Length == 0)
             {
                 file = null;

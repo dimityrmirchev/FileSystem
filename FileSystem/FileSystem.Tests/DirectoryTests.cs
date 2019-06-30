@@ -65,5 +65,21 @@ namespace FileSystem.Tests
 
             Assert.IsTrue(directory.GetChildren().Count() == 1);
         }
+
+        [TestMethod]
+        public void AddChildrenToDirectoryAndAssertParent()
+        {
+            var path = "/sample";
+            var directory = new Directory(path, null);
+
+            var directoryChild = new Directory(path + "/sample1", directory);
+            var contentFileChild = new ContentFile(path + "/test.txt", "Sample text.", directory);
+
+            directory.AddChild(directoryChild);
+            directory.AddChild(contentFileChild);
+
+           Assert.IsTrue(directoryChild.Parent == directory);
+           Assert.IsTrue(contentFileChild.Parent == directory);
+        }
     }
 }
