@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace FileSystem.Models
 {
+    /// <summary>
+    /// Provides an abstraction to help implement file system hierarchy.
+    /// </summary>
     public abstract class File
     {
         protected File(string path, Directory parent)
@@ -23,10 +26,19 @@ namespace FileSystem.Models
             Path = path;
         }
 
+        /// <summary>
+        /// The name of the file.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// The directory containing the file.
+        /// </summary>
         public Directory Parent { get; }
 
+        /// <summary>
+        /// The full path to the file.
+        /// </summary>
         public string Path { get; }
     }
 }

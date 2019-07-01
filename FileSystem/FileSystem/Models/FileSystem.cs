@@ -4,19 +4,32 @@ using System.Linq;
 
 namespace FileSystem.Models
 {
+    /// <summary>
+    /// Provides a generic implementation of file system supporting hierarchy.
+    /// </summary>
     public sealed class FileSystem
     {
         private readonly Directory _root;
         private Directory _currentDirectory;
 
+        /// <summary>
+        /// Initializes the default root folder and sets the current directory to it.
+        /// </summary>
         public FileSystem()
         {
             _root = new Directory("/", null);
             _currentDirectory = _root;
         }
 
+        /// <summary>
+        /// Gets the current directory path.
+        /// </summary>
         public string CurrentDirectoryPath => _currentDirectory.Path;
 
+        /// <summary>
+        /// Changes the current directory.
+        /// </summary>
+        /// <param name="path">The path to navigate to.</param>
         public void ChangeDirectory(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -27,6 +40,11 @@ namespace FileSystem.Models
             ChangeDirectory(path, !path.StartsWith('/'));
         }
 
+        /// <summary>
+        /// Creates a new content file.
+        /// </summary>
+        /// <param name="path">The path to the file that is going to be created.</param>
+        /// <param name="content">The content of the file that is going to be created.</param>
         public void CreateContentFile(string path, string content)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -37,6 +55,10 @@ namespace FileSystem.Models
             CreateContentFile(path, !path.StartsWith('/'), content);
         }
 
+        /// <summary>
+        /// Creates a new directory.
+        /// </summary>
+        /// <param name="path">The path to the directory that is going to be created.</param>
         public void CreateDirectory(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -47,6 +69,14 @@ namespace FileSystem.Models
             CreateDirectory(path, !path.StartsWith('/'));
         }
 
+        /// <summary>
+        /// Lists the children of a specific directory.
+        /// </summary>
+        /// <param name="path">
+        /// The path to the directory that is going to be listed.
+        /// If empty or whitespace the listed directory will match the current directory.
+        /// </param>
+        /// <returns>The children of a specific directory.</returns>
         public IEnumerable<File> ListDirectory(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -62,6 +92,10 @@ namespace FileSystem.Models
             throw new InvalidOperationException($"Couldn't list directory {path}");
         }
 
+        /// <summary>
+        /// Removes a list of content files.
+        /// </summary>
+        /// <param name="paths">The path to the files that are going to be removed.</param>
         public void RemoveContentFiles(string[] paths)
         {
             if (paths == null)
@@ -95,6 +129,12 @@ namespace FileSystem.Models
             }
         }
 
+        /// <summary>
+        /// Converts a path to its file equivalent. A return value indicates whether the conversion succeeded or failed.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        /// <param name="file">The out value of the converted file.</param>
+        /// <returns>True if successful and false if not.</returns>
         public bool TryGetFile(string path, out File file)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -125,7 +165,7 @@ namespace FileSystem.Models
                 var pathToAddTo = path.Substring(0, lastIndex + 1);
                 var newContentFileName = path.Substring(lastIndex + 1, path.Length - lastIndex - 1);
 
-                if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo) && 
+                if (TryGetDirectory(pathToAddTo, isRelative, out Directory directoryToAddTo) &&
                     !TryGetFile(path, isRelative, out File _))
                 {
                     var newContentFilePath = GetNewFilePath(directoryToAddTo.Path, newContentFileName);

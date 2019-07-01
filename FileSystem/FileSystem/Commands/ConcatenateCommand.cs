@@ -5,8 +5,15 @@ using FileSystem.Models;
 
 namespace FileSystem.Commands
 {
+    ///<summary>
+    /// Represents a command used to concatenate the content of a collection of files and output it to a target.
+    /// </summary>
     public sealed class ConcatenateCommand : Command
     {
+        /// <summary>
+        /// Initializes a command of type ConcatenateCommand.
+        /// </summary>
+        /// <param name="parameters">Parameters specifying the input files and the output target.</param>
         public ConcatenateCommand(string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
@@ -17,10 +24,20 @@ namespace FileSystem.Commands
             ParseParameters(parameters.Trim());
         }
 
+        /// <summary>
+        /// Gets the input files paths.
+        /// </summary>
         public string[] InputFiles { get; private set; }
 
+        /// <summary>
+        /// Gets the output file path.
+        /// </summary>
         public string OutputFile { get; private set; }
 
+        /// <summary>
+        /// Executes the concatenate command.
+        /// </summary>
+        /// <param name="fileSystem">The file system on which the command is going to be executed.</param>
         public override void Execute(Models.FileSystem fileSystem)
         {
             var hasInputFiles = InputFiles.Any();

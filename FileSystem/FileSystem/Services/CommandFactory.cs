@@ -4,8 +4,16 @@ using FileSystem.Exceptions;
 
 namespace FileSystem.Services
 {
+    /// <summary>
+    /// Provides access to factory methods for creating and configuring commands.
+    /// </summary>
     public sealed class CommandFactory
     {
+        /// <summary>
+        /// Creates a command based on the input parameter.
+        /// </summary>
+        /// <param name="input">The input string to determine the type of command and its parameters.</param>
+        /// <returns>The successfully created instance of the command.</returns>
         public ICommand GetCommand(string input)
         {
             var commandName = GetCommandName(input);
