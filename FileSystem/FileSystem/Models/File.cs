@@ -8,6 +8,11 @@ namespace FileSystem.Models
     /// </summary>
     public abstract class File
     {
+        /// <summary>
+        /// Initializes a file.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        /// <param name="parent">The file's parent.</param>
         protected File(string path, Directory parent)
         {
             if (string.IsNullOrWhiteSpace(path))

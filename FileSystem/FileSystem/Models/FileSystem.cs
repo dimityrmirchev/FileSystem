@@ -13,7 +13,7 @@ namespace FileSystem.Models
         private Directory _currentDirectory;
 
         /// <summary>
-        /// Initializes the default root folder and sets the current directory to it.
+        /// Initializes a new file system with a default root directory.
         /// </summary>
         public FileSystem()
         {

@@ -12,7 +12,7 @@ namespace FileSystem.Models
         private readonly List<File> _children;
 
         /// <summary>
-        /// Creates a directory.
+        /// Initializes a directory.
         /// </summary>
         /// <param name="path">The path to the directory.</param>
         /// <param name="parent">The directory's parent.</param>
