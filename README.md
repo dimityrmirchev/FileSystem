@@ -1,3 +1,5 @@
+![.NET Core](https://github.com/dimityrmirchev/FileSystem/workflows/.NET%20Core/badge.svg)
+
 # FileSystem
 A simple file system implemented for the Clean Code course FMI 2019.
 
