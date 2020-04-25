@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore ../../FileSystem/FileSystem.sln
+      run: dotnet restore ./FileSystem/FileSystem.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore ../../FileSystem/FileSystem.sln
+      run: dotnet build --configuration Release --no-restore ./FileSystem/FileSystem.sln
     - name: Test
-      run: dotnet test --no-restore --verbosity normal ../../FileSystem/FileSystem.Tests/FileSystem.Tests.csproj
+      run: dotnet test --no-restore --verbosity normal ./FileSystem/FileSystem.Tests/FileSystem.Tests.csproj
